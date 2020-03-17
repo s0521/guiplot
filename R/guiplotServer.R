@@ -6,29 +6,29 @@ guiplot_tital_Server<- function(input, output, session) {
 
 guiplot_result_Server <- function(input, output, session) {
   observeEvent(input$ExecuteButton, {
-    ggsave("ggplot.pdf")
-    ggsave("ggplot.png", dpi=300)
+    ggsave("ggplot.pdf", width = input$Panle_Width, height =input$Panle_Height, units ="mm")
+    ggsave("ggplot.png", dpi=300, width = input$Panle_Width, height =input$Panle_Height, units ="mm")
   })
 }
 
 guiplot_plot_Server <- function(input, output, session, data =NULL,dataname=NULL) {
+  Panle_Height<-reactive({input$Panle_Height})
+  Panle_Width<-reactive({input$Panle_Width})
+
   output$plot <- renderPlot({
     # Plot the data with x/y vars indicated by the caller.
     mptable<-data()
     if((is.null(mptable) )){
       return()
     }
-    #input$ExecuteButton
     xvar<-GetMappingValue(mptable,2)
     yvar<-GetMappingValue(mptable,3)
     group<-GetMappingValue(mptable,4)
     type<-c("point","line")
     gg2<-geomCode(type,dataname,xvar,yvar,group)
-    #ggsave("ggplot.svg")
-    #ggsave("ggplot.bmp", dpi=300)
     gg2
     #return(mptable)
-  })
+  },width = Panle_Width, height =Panle_Height)
 }
 
 guiplot_dt_Server <- function(input, output, session, data1 =NULL,colname=NULL) {

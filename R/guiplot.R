@@ -19,9 +19,12 @@ guiplot <- function(data = NULL) {
 
 res_data <- get_data(data, name = deparse(substitute(data)))
 colna<-c("none","xvar","yvar","group")
-
+# Panle_Height<-reactive(input$Panle_Height)
+# Panle_Width<-reactive(input$Panle_Width)
 
 guiplotServer = function(input, output, session) {
+  # Panl_Height<-reactive({input$Panle_Height})
+  # Panl_Width<-reactive({input$Panle_Width})
   callModule(
     module = guiplot_tital_Server,
     id = "guiplot"
