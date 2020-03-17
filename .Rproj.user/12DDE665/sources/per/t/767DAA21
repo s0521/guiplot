@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1584417263927.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2631078370",
+    "id" : "767DAA21",
+    "lastKnownWriteTime" : 1584417295,
+    "last_content_update" : 1584417295457,
+    "path" : "D:/mplot/mplot/R/guiplot.R",
+    "project_path" : "R/guiplot.R",
+    "properties" : {
+        "cursorPosition" : "33,27",
+        "scrollLine" : "21"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

@@ -1,0 +1,17 @@
+.GlobalEnv
+package:mplot
+devtools_shims
+package:rlang
+package:DT
+package:ggplot2
+package:miniUI
+package:shiny
+tools:rstudio
+package:stats
+package:graphics
+package:grDevices
+package:utils
+package:datasets
+package:methods
+Autoloads
+package:base
