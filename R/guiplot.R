@@ -22,6 +22,15 @@ colna<-c("none","xvar","yvar","group")
 
 
 guiplotServer = function(input, output, session) {
+  callModule(
+    module = guiplot_tital_Server,
+    id = "guiplot"
+  )
+
+  callModule(
+    module = guiplot_result_Server,
+    id = "guiplot"
+  )
 
   mptable<- callModule(
     module = guiplot_dt_Server,

@@ -1,3 +1,25 @@
+tital_ui<-function(id="guiplot"){
+  ns <- NS(id)
+  tagList(
+    fluidRow(style='background-color:#48D1CC;
+             border-style:solid;
+             border-width:1px;
+             border-color:Black',
+      column(3,actionButton(
+        ns("ExecuteButton"),
+        "Execute!",
+        style='color:Black;background-color:LimeGreen;font-weight:bold;border-color:Black'
+        )),
+      column(6,"guiplot:User-friendly R programming language ploting tools",style='font-weight:bold'),
+      column(3,actionButton(
+        ns("ColseButton"),
+        "Finish and Close",
+        style='color:Black;background-color:Darkorange;font-weight:bold;border-color:Black'
+        ))
+    )
+  )
+}
+
 tabPanel_name_ui<-function(id="guiplot") {
   #first Data
   ns <- NS(id)
@@ -11,22 +33,24 @@ tabPanel_value_ui<-function(id="guiplot") {
 }
 
 
-guiplotUI2<-function(id="guiplot"){
+plot_ui<-function(id="guiplot"){
 	ns <- NS(id)
 	tagList(
-		#titlePanel("guiplot"),
-		#"Import Data list",
 		fluidRow(
-			column(12,actionButton(ns("ExecuteButton"), "Execute!"))
-		),
-		fluidRow(
-			column(6,plotOutput(ns('plot')))
-		),
+			column(8,plotOutput(ns('plot')))
+		)
 	)
 }
 
 guiplotUI <- fluidPage(
+  style='border-style:solid;
+  border-width:1px;
+  border-color:Black',
+  tital_ui("guiplot"),
   navlistPanel(
+    well = TRUE,
+    fluid = TRUE,
+    widths = c(3, 9),
     tabPanel(
       tabPanel_name_ui("guiplot"),
       tabPanel_value_ui("guiplot")
@@ -35,5 +59,5 @@ guiplotUI <- fluidPage(
       "second data"
     )
   ) ,
-  guiplotUI2("guiplot")
+  plot_ui("guiplot")
 )

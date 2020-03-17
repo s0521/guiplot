@@ -1,3 +1,16 @@
+guiplot_tital_Server<- function(input, output, session) {
+  observeEvent(input$ColseButton, {
+    stopApp(NULL)
+  })
+}
+
+guiplot_result_Server <- function(input, output, session) {
+  observeEvent(input$ExecuteButton, {
+    ggsave("ggplot.pdf")
+    ggsave("ggplot.png", dpi=300)
+  })
+}
+
 guiplot_plot_Server <- function(input, output, session, data =NULL,dataname=NULL) {
   output$plot <- renderPlot({
     # Plot the data with x/y vars indicated by the caller.
@@ -5,15 +18,16 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,dataname=NULL
     if((is.null(mptable) )){
       return()
     }
-    input$ExecuteButton
+    #input$ExecuteButton
     xvar<-GetMappingValue(mptable,2)
     yvar<-GetMappingValue(mptable,3)
     group<-GetMappingValue(mptable,4)
     type<-c("point","line")
     gg2<-geomCode(type,dataname,xvar,yvar,group)
-    ggsave("ggplot.svg", dpi=300)
-    ggsave("ggplot.bmp", dpi=300)
+    #ggsave("ggplot.svg")
+    #ggsave("ggplot.bmp", dpi=300)
     gg2
+    #return(mptable)
   })
 }
 
