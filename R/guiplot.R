@@ -6,7 +6,7 @@
 #' @param data Matrix or data frame
 #' @export
 #' @return code to reproduce chart.
-#' @import shiny ggplot2
+#' @import shiny ggplot2 shinydashboard
 #' @importFrom DT datatable DTOutput renderDT JS editData
 #' @importFrom rlang parse_expr expr
 #'

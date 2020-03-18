@@ -3,6 +3,7 @@
 export(guiplot)
 import(ggplot2)
 import(shiny)
+import(shinydashboard)
 importFrom(DT,DTOutput)
 importFrom(DT,JS)
 importFrom(DT,datatable)

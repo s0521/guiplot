@@ -57,7 +57,8 @@ guiplot_dt_Server <- function(input, output, session, data1 =NULL,colname=NULL) 
 		options = list(autoFill = list(horizontal=TRUE),
 		autoWidth = TRUE,
 		columnDefs = list(
-		  list(width = '20px', targets = 1:ncol(dat))
+		  list(width = '20px', targets = 1:ncol(dat)),
+		  list(className = 'dt-center', targets = 1:ncol(dat))
 		  ),
 		dom = 't',paging = FALSE, ordering = FALSE)
 	)#%>% formatStyle(colna, cursor = 'pointer')
