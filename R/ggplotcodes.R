@@ -14,13 +14,13 @@ geomCode<-function(type,data,x,y,group=NULL){
 
 	ggcalltext<-paste(sep="","ggplot() +",geomCode)
 	cat(file=stderr(), "ggcalltext is ",ggcalltext)
-
+	return(ggcalltext)
 
 	#browser()
-	ggcall<-parse_expr(ggcalltext)
-	#cat(file=stderr(), "drawing histogram with",ggcall)
-	ggcall
-	eval(ggcall)
+	# ggcall<-parse_expr(ggcalltext)
+	# #cat(file=stderr(), "drawing histogram with",ggcall)
+	# ggcall
+	# eval(ggcall)
 
 }
 

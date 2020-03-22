@@ -15,6 +15,32 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,dataname=NULL
   Panle_Height<-reactive({input$Panle_Height})
   Panle_Width<-reactive({input$Panle_Width})
 
+  coord_trans_codes <- reactive({
+    axis_x<-list(
+      Scale=input$X_Scale,
+      Range=input$X_Range,
+      Minimum=input$X_Minimum,
+      Maximum=input$X_Maximum,
+      expand_p=input$X_expand_p,
+      expand_u=input$X_expand_u
+    )
+    axis_y<-list(
+      Scale=input$Y_Scale,
+      Range=input$Y_Range,
+      Minimum=input$Y_Minimum,
+      Maximum=input$Y_Maximum,
+      expand_p=input$Y_expand_p,
+      expand_u=input$Y_expand_u
+    )
+    a<-coord_trans_code(axis_x,axis_y)
+    # browser()
+    if(nchar(a)<17)
+      return()
+
+    # return(coord_trans_code(axis_x,axis_y))
+    return(a)
+  })
+
   output$plot <- renderPlot({
     # Plot the data with x/y vars indicated by the caller.
     mptable<-data()
@@ -25,11 +51,22 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,dataname=NULL
     yvar<-GetMappingValue(mptable,3)
     group<-GetMappingValue(mptable,4)
     type<-c("point","line")
-    gg2<-geomCode(type,dataname,xvar,yvar,group)
-    gg2
+
+    gg_geom_code<-geomCode(type,dataname,xvar,yvar,group)
+    gg_coord_code<-coord_trans_codes()
+    gg_test_code<-("scale_y_log10()")
+    cat(file=stderr(), " gg_coord_code is ",gg_coord_code)
+
+    # browser()
+    # gg2<-paste(sep="+",gg_geom_code, gg_coord_code)
+    gg2<-c(gg_geom_code, gg_coord_code)
+    gg2<-paste(sep="+",collapse ="+",gg2)
+
+    eval(parse_expr(as.character(gg2)))
     #return(mptable)
   },width = Panle_Width, height =Panle_Height)
 }
+
 
 guiplot_dt_Server <- function(input, output, session, data1 =NULL,colname=NULL) {
 	#server = FALSE
