@@ -11,7 +11,8 @@ guiplot_result_Server <- function(input, output, session) {
   })
 }
 
-guiplot_plot_Server <- function(input, output, session, data =NULL,dataname=NULL) {
+guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NULL) {
+  # browser()
   Panle_Height<-reactive({input$Panle_Height})
   Panle_Width<-reactive({input$Panle_Width})
 
@@ -41,39 +42,72 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,dataname=NULL
     return(a)
   })
 
-  output$plot <- renderPlot({
-    # Plot the data with x/y vars indicated by the caller.
-    mptable<-data()
-    if((is.null(mptable) )){
-      return()
-    }
-    xvar<-GetMappingValue(mptable,2)
-    yvar<-GetMappingValue(mptable,3)
-    group<-GetMappingValue(mptable,4)
-    type<-c("point","line")
-
-    gg_geom_code<-geomCode(type,dataname,xvar,yvar,group)
-    gg_coord_code<-coord_trans_codes()
-    gg_test_code<-("scale_y_log10()")
-    cat(file=stderr(), " gg_coord_code is ",gg_coord_code)
-
+  geom_alldata_codes<- reactive({
     # browser()
-    # gg2<-paste(sep="+",gg_geom_code, gg_coord_code)
-    gg2<-c(gg_geom_code, gg_coord_code)
-    gg2<-paste(sep="+",collapse ="+",gg2)
+    ls1<-data
+    # browser()
+    geom_data_names<-c(datanames)
+    n_data<-length(geom_data_names)
 
-    eval(parse_expr(as.character(gg2)))
-    #return(mptable)
+    data_code<-NULL
+    for (i in 1:n_data){
+      # browser()
+      # mptable<-data[[i]]
+      # mptable<-reactive({
+      #   p<-data[i]()
+      #   return(p)})
+      mptable<-data[[i]]
+      dataname<-c(geom_data_names[[i]])
+
+      if((is.null(mptable) )){
+        return()
+      }
+      xvar<-GetMappingValue(mptable(),2)
+      yvar<-GetMappingValue(mptable(),3)
+      group<-GetMappingValue(mptable(),4)
+      type<-c("point","line")
+      # browser()
+      code<-geomCode(type,dataname,xvar,yvar,group)
+      if (!is.null(code))
+      data_code[i]<-geomCode(type,dataname,xvar,yvar,group)
+      # data_codes<-c(data_codes,data_code)
+      cat(file=stderr(), "\n data_code is ",data_code)
+    }
+    data_code<-na.omit(data_code)
+    data_codes<-paste(collapse ="+",data_code)
+    # browser()
+    data_codes
+  })
+
+  output$plot <- renderPlot({
+
+    gg_geom_codes<-geom_alldata_codes()
+    cat(file=stderr(), "\n gg_geom_codes is ",gg_geom_codes)
+    # browser()
+
+    gg_coord_code<-coord_trans_codes()
+    cat(file=stderr(), "\n gg_coord_code is ",gg_coord_code)
+
+    gg2<-c("ggplot() ",gg_geom_codes, gg_coord_code)
+    gg2<-paste(sep="+",collapse ="+",gg2)
+    cat(file=stderr(), "\n gg2 is ",gg2)
+    # req(gg_geom_codes)
+    if (is.null(gg_geom_codes)||gg_geom_codes==""){
+        return(ggplot())
+    }else{
+      eval(parse_expr(as.character(gg2)))
+    }
   },width = Panle_Width, height =Panle_Height)
 }
 
 
 guiplot_dt_Server <- function(input, output, session, data1 =NULL,colname=NULL) {
 	#server = FALSE
+  # browser()
   colna<-colname
 	data<-NULL
-	data<-as.data.frame(data1$guiplot_data)
-	dataname<-c(data1$guiplot_data_name)
+	data<-as.data.frame(data1[[1]])
+	dataname<-c(data1[[2]])
 	#
 	dat<-Tint(mpm(data,colna),1)
 
@@ -104,14 +138,10 @@ guiplot_dt_Server <- function(input, output, session, data1 =NULL,colname=NULL) 
 	#################################
 	#################reactive########
 	#################################
-	mptable<-reactive({
-	  a<-NULL
-	  a<-Data_fill()
-	  a<-Data_select()
-	  dat
-	})
+
 
 	Data_fill <- reactive({
+	  # browser()
 		info <- input[["dt_cells_filled"]]
 		if(!is.null(info)){
 		  info <- unique(info)
@@ -140,8 +170,16 @@ guiplot_dt_Server <- function(input, output, session, data1 =NULL,colname=NULL) 
 	  }
 	  dat
 	})
-
-	return(mptable)
+	return(list(mptable=reactive({
+	                # browser()
+	                a<-NULL
+	                a<-Data_fill()
+	                a<- input[["dt_cells_filled"]]
+	                a<-Data_select()
+	                a<-input[["dt_cells_selected"]]
+	                a<-dat
+	                return(a)
+	              })))
 }
 
 callback <- c(
@@ -251,8 +289,10 @@ Binfo<-function(data){
 }
 
 GetMappingValue<-function(data,column){
-  #browser()
+  # browser()
   nr<-nrow(data)
+  if (is.null(nr))
+    return()
   var1<-c()
   for (i in seq_len(nr)) {
     if (data[i,column]==1) {

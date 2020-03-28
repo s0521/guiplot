@@ -33,22 +33,45 @@ toolbar_ui<-function(id="guiplot"){
 }
 
 #Data and Plot
-setup_ui<-function(id="guiplot") {
+# setup_ui<-function(id="guiplot") {
+#   ns <- NS(id)
+#   tabPanel("Setup Panel",
+#     navlistPanel(
+#       well = TRUE,
+#       fluid = TRUE,
+#       widths = c(3, 9),
+#       # tabPanel(
+#       #   setup_tabPanel_name_ui(id),
+#       #   setup_tabPanel_value_ui(id)
+#       # ),
+#       setup_tabPanel_panel(id),
+#       tabPanel(
+#         "second data"
+#       )
+#     ),
+#     plot_ui("guiplot")
+#   )
+# }
+setup_tabPanel_panel2<-function(id="guiplot") {
   ns <- NS(id)
-  tabPanel("Setup Panel",
-    navlistPanel(
-      well = TRUE,
-      fluid = TRUE,
-      widths = c(3, 9),
-      tabPanel(
-        setup_tabPanel_name_ui(id),
-        setup_tabPanel_value_ui(id)
-      ),
-      tabPanel(
-        "second data"
-      )
-    ),
-    plot_ui("guiplot")
+  tabPanel(
+    'test01',
+    fluidPage(
+      style='float:left',
+      'test02'
+    )
+  )
+}
+
+
+setup_tabPanel_panel<-function(id="guiplot") {
+  ns <- NS(id)
+  tabPanel(
+    textOutput(ns('tab1')),
+    fluidPage(
+      style='float:left',
+      DTOutput(ns('dt'))
+    )
   )
 }
 
@@ -179,17 +202,40 @@ object_options_ui<-function(id="guiplot") {
   )
 }
 
+setup_tabPanel_panel<-function(id="guiplot") {
+  ns <- NS(id)
+  tabPanel(
+    textOutput(ns('tab1')),
+    fluidPage(
+      style='float:left',
+      DTOutput(ns('dt'))
+    )
+  )
+}
+
+
 guiplotUI <- fluidPage(
   #Header
   tital_ui("guiplot"),
   toolbar_ui("guiplot"),
 
+  ####################################
   #Data and Plot
   tabsetPanel(
-	  setup_ui("guiplot"),
+      tabPanel("Setup Panel",
+
+               uiOutput("ui"),
+
+               plot_ui("guiplot")
+      ),
+
+
+	  # setup_ui("guiplot"),
 	  results_ui("guiplot")
   ),
   # plot_ui("guiplot"),
+  ####################################
+
 
   #Object Options
   object_options_ui("guiplot"),

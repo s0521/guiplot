@@ -1,6 +1,6 @@
 #use esquisse's function
 get_data <- function(data = NULL, name = NULL) {
-  
+
   if (!is.null(data)) {
     if (is.character(data)) {
       guiplot_data <- try({
@@ -36,16 +36,12 @@ get_data <- function(data = NULL, name = NULL) {
           guiplot_data_name <- deparse(substitute(data))
         }
       }
-      
+
     } else {
       guiplot_data <- NULL
       guiplot_data_name <- ""
     }
-  } 
-  
+  }
+
   list(guiplot_data = guiplot_data, guiplot_data_name = guiplot_data_name)
 }
-
-
-
-

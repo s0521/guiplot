@@ -1,26 +1,17 @@
 #ggplot codes
 geomCode<-function(type,data,x,y,group=NULL){
 	if (is.null(data)||is.null(x)||is.null(y))
-		return(expr(ggplot()))
-  #name<-deparse(substitute(data))
+		return()
+  # browser()
   name<-data
 	type<-GetTypeText(type)
 	data<-GetDataText(name)
 	x<-GetXText(x)
 	y<-GetYText(y)
 	group<-GetGroupText(group)
-	#geomCode<-GetGeomCode(type,data,x,y,group)
 	geomCode<-SetEveryY(type,data,x,y,group)
 
-	ggcalltext<-paste(sep="","ggplot() +",geomCode)
-	cat(file=stderr(), "ggcalltext is ",ggcalltext)
-	return(ggcalltext)
-
-	#browser()
-	# ggcall<-parse_expr(ggcalltext)
-	# #cat(file=stderr(), "drawing histogram with",ggcall)
-	# ggcall
-	# eval(ggcall)
+	return(geomCode)
 
 }
 
@@ -35,7 +26,6 @@ SetEveryY<-function(type,data,x,y,group){
     j<-j+1
   }
   geomCodes<-paste(geomCode,collapse ="+")
-  #geomCodes<-parse_expr(geomCodes)
   geomCodes
 }
 
@@ -67,56 +57,56 @@ GetTypeText<-function(data){
 }
 
 GetDataText<-function(data){
-if(is.null(data))
-return()
-GetDataText<-textp("data",data)
-GetDataText
+  if(is.null(data))
+  return()
+  GetDataText<-textp("data",data)
+  GetDataText
 }
 
 
 
 GetXText<-function(data){
-if(is.null(data))
-return()
-GetXText<-textp("x",data)
-GetXText
+  if(is.null(data))
+  return()
+  GetXText<-textp("x",data)
+  GetXText
 }
 
 
 
 GetYText<-function(data){
-if(is.null(data))
-return()
-GetYText<-textp("y",data)
-GetYText
+  if(is.null(data))
+  return()
+  GetYText<-textp("y",data)
+  GetYText
 }
 
 
 
 GetGroupText<-function(data){
-if(is.null(data))
-return(NULL)
-GetGroupText<-textp("color",data)
-GetGroupText
+  if(is.null(data))
+  return(NULL)
+  GetGroupText<-textp("color",data)
+  GetGroupText
 }
 
 #textp int
 textp1<-function(name,data){
-if(is.null(data)||is.null(name))
-return()
-if(is.character(data)){
-GetDataText<-paste(sep="",name,"=",data)
-}
-else{
-GetDataText<-paste(sep="",name,"=",substitute(data))
-}
-GetDataText
+  if(is.null(data)||is.null(name))
+  return()
+  if(is.character(data)){
+  GetDataText<-paste(sep="",name,"=",data)
+  }
+  else{
+  GetDataText<-paste(sep="",name,"=",substitute(data))
+  }
+  GetDataText
 }
 
 #textp final
 textp<-function(name,data){
-if(is.null(data)||is.null(name))
-return()
-GetDataText<-paste(sep="",name,"=",data)
-GetDataText
+  if(is.null(data)||is.null(name))
+  return()
+  GetDataText<-paste(sep="",name,"=",data)
+  GetDataText
 }
