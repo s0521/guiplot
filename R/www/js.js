@@ -1,1 +1,0 @@
-$("div .content-wrappe").css("min-height",10)

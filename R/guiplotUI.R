@@ -132,6 +132,26 @@ object_options_ui<-function(id="guiplot") {
     widths = c(3, 9),
     "Plot",
       tabPanel(
+        "themes",
+        tagList(
+          fluidRow(
+            column(3,
+                   radioButtons(ns("themes"), "themes",
+                                c("theme_gray" = "theme_gray",
+                                  "theme_bw" = "theme_bw",
+                                  "theme_linedraw" = "theme_linedraw",
+                                  "theme_light" = "theme_light",
+                                  "theme_dark" = "theme_dark",
+                                  "theme_minimal" = "theme_minimal",
+                                  "theme_classic" = "theme_classic",
+                                  "theme_void" = "theme_void",
+                                  "theme_minimal" = "theme_minimal")
+                                )
+            )
+          )
+        )
+      ),
+      tabPanel(
         "Layout",
         numericInput(ns('Panle_Height'),'Panle Height(mm)',250),
         numericInput(ns('Panle_Width'),'Panle Width(mm)',500)
@@ -176,7 +196,8 @@ object_options_ui<-function(id="guiplot") {
                                 c("Linear" = "identity",
                                   "log10" = "log10",
                                   "log2" = "log2",
-                                  "ln" = "ln",
+                                  "logit" = "logit",
+                                  "probability" = "probability",
                                   "sqrt" = "sqrt"))
             ),
             column(3,

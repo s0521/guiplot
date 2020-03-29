@@ -16,7 +16,7 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
   Panle_Height<-reactive({input$Panle_Height})
   Panle_Width<-reactive({input$Panle_Width})
 
-  coord_trans_codes <- reactive({
+  get_coord_trans_codes <- reactive({
     axis_x<-list(
       Scale=input$X_Scale,
       Range=input$X_Range,
@@ -42,7 +42,20 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
     return(a)
   })
 
-  geom_alldata_codes<- reactive({
+  get_plot_themes_codes <- reactive({
+    # browser()
+    p_plot_thems<-list(
+      plot_themes=input$themes
+    )
+    a<-plot_themes_code(p_plot_thems)
+    # browser()
+    if(nchar(a)<4)
+      return()
+    # return(coord_trans_code(axis_x,axis_y))
+    return(a)
+  })
+
+  get_geomCode<- reactive({
     # browser()
     ls1<-data
     # browser()
@@ -81,14 +94,17 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
 
   output$plot <- renderPlot({
 
-    gg_geom_codes<-geom_alldata_codes()
+    gg_geom_codes<-get_geomCode()
     cat(file=stderr(), "\n gg_geom_codes is ",gg_geom_codes)
     # browser()
 
-    gg_coord_code<-coord_trans_codes()
+    gg_coord_code<-get_coord_trans_codes()
     cat(file=stderr(), "\n gg_coord_code is ",gg_coord_code)
 
-    gg2<-c("ggplot() ",gg_geom_codes, gg_coord_code)
+    gg_themes_codes<-get_plot_themes_codes()
+    cat(file=stderr(), "\n gg_themes_codes is ",gg_themes_codes)
+
+    gg2<-c("ggplot() ",gg_geom_codes, gg_coord_code, gg_themes_codes)
     gg2<-paste(sep="+",collapse ="+",gg2)
     cat(file=stderr(), "\n gg2 is ",gg2)
     # req(gg_geom_codes)

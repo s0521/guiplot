@@ -4,7 +4,7 @@ coord_trans_code<-function(axis_x,axis_y){
 		return()
 	x_code<-axis_to_coord_code(axis_x,"x")
 	y_code<-axis_to_coord_code(axis_y,"y")
-	
+
 	arry<-c(x_code,y_code)
 	axis_code<-paste(sep="+",collapse ="+",arry)
 	if (is.null(axis_code)){
@@ -26,9 +26,9 @@ axis_to_coord_code<-function(axis,x_y){
 	  arry1<- c(
 			"trans =","'",
 			switch(
-				axis$Scale, 
-				identity = 'identity', 
-				log10 = 'log10', 
+				axis$Scale,
+				identity = 'identity',
+				log10 = 'log10',
 				log2 = 'log2',
 				logit = 'logit',
 				probability = 'probability',
@@ -55,7 +55,7 @@ axis_to_coord_code<-function(axis,x_y){
 		coord_code$lim<- paste(sep="",collapse ="",arry2)
 		arry2<-NULL
 	}
-	
+
 	#set expand range
 
 	arry2<- c(
@@ -67,11 +67,29 @@ axis_to_coord_code<-function(axis,x_y){
 	)
 	coord_code$expand<- paste(sep="",collapse ="",arry2)
 	arry2<-NULL
-	
-	
-	
+
+
+
 	#paste trans and range
 	arry3<-c("scale_",x_y,"_continuous(",coord_code$trans,",",coord_code$lim,",",coord_code$expand,")")
 	one_axis<-paste(sep="",collapse ="",arry3)
 	return(one_axis)
+}
+
+plot_themes_code<-function(radioButtons_plot_themes){
+  arry4<-c(switch(
+    radioButtons_plot_themes$plot_themes,
+    theme_gray = 'theme_gray()',
+    theme_bw = 'theme_bw()',
+    theme_linedraw = 'theme_linedraw()',
+    theme_light = 'theme_light()',
+    theme_dark = 'theme_dark()',
+    theme_minimal = 'theme_minimal()',
+    theme_classic = 'theme_classic()',
+    theme_void = 'theme_void()',
+    theme_minimal = 'theme_minimal()'
+  ))
+  plot_themes<-paste(sep="",collapse ="",arry4)
+  arry4<-NULL
+  return(plot_themes)
 }

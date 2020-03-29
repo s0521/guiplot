@@ -59,7 +59,7 @@ guiplotServer = function(input, output, session) {
   )
 
   ##############################
-  #
+  #setup_tabPanel_panel
   output$ui<-renderUI({
     id = "guiplot"
     ns <- NS(id)
