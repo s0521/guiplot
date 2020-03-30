@@ -208,8 +208,8 @@ object_options_ui<-function(id="guiplot") {
                    numericInput(ns('Y_Maximum'),'Maximum',100)
             ),
             column(3,
-                   numericInput(ns('Y_expand_p'),'expand_s',0.05),
-                   numericInput(ns('Y_expand_u'),'expand_e',0)
+                   numericInput(ns('Y_expand_p'),'expand_plot',0.05),
+                   numericInput(ns('Y_expand_u'),'expand_unit',0)
             )
           )
         )
