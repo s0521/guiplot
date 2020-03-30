@@ -156,10 +156,11 @@ guiplot_dt_Server <- function(input, output, session, data1 =NULL,colname=NULL) 
 
 	datatable(dat,
 		rownames = TRUE,width=100 ,
-		editable = list(target = "cell"),selection = list(mode = 'single', target = 'cell'),
+		# editable = list(target = "cell"),
+		selection = list(mode = 'single', target = 'cell'),
 		callback = JS(callback),
 		extensions = c('AutoFill'),
-		options = list(autoFill = list(horizontal=TRUE),
+		options = list(autoFill = list(horizontal=FALSE,vertical=TRUE,alwaysAsk=FALSE),
 		autoWidth = TRUE,
 		columnDefs = list(
 		  list(width = '20px', targets = 1:ncol(dat)),
