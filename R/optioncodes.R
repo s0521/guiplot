@@ -57,22 +57,34 @@ axis_to_coord_code<-function(axis,x_y){
 	}
 
 	#set expand range
+	if (axis$expand_p==0.05 && axis$expand_u==0){
+	  coord_code$expand<-NULL
+	}else{
+  	arry2<- c(
+  		"expand "," = c(",
+  		axis$expand_p,
+  		",",
+  		axis$expand_u,
+  		")"
+  	)
+  	coord_code$expand<- paste(sep="",collapse ="",arry2)
+  	arry2<-NULL
+	}
 
-	arry2<- c(
-		"expand "," = c(",
-		axis$expand_p,
-		",",
-		axis$expand_u,
-		")"
-	)
-	coord_code$expand<- paste(sep="",collapse ="",arry2)
-	arry2<-NULL
 
-
-
+	# browser()
 	#paste trans and range
-	arry3<-c("scale_",x_y,"_continuous(",coord_code$trans,",",coord_code$lim,",",coord_code$expand,")")
-	one_axis<-paste(sep="",collapse ="",arry3)
+	if(
+	  is.null(coord_code$trans) &&
+	  is.null(coord_code$lim) &&
+    is.null(coord_code$expand)
+	){
+	  one_axis<-NULL
+	}else{
+	  arry3<-c("scale_",x_y,"_continuous(",coord_code$trans,",",coord_code$lim,",",coord_code$expand,")")
+	  one_axis<-paste(sep="",collapse ="",arry3)
+	  arry3<-NULL
+	}
 	return(one_axis)
 }
 

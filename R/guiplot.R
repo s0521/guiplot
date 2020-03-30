@@ -18,7 +18,7 @@
 guiplot <- function(...) {
   ########################################################
   #Obtaining and Specifying the Data and Parameters Needed
-  colna<-c("none","xvar","yvar","group")
+  colna<-c("none","x","y","group","ymin","ymax")
 
   get_data_arry<-function(...){
     # browser()

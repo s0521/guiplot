@@ -4,7 +4,7 @@
 \alias{guiplot}
 \title{guiplot}
 \usage{
-guiplot(data = NULL)
+guiplot(...)
 }
 \arguments{
 \item{data}{Matrix or data frame}

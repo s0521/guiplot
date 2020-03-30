@@ -32,6 +32,71 @@ toolbar_ui<-function(id="guiplot"){
   )
 }
 
+geom_type_ui<-function(id="guiplot"){
+  ns <- NS(id)
+  tagList(
+    fluidRow(style='background-color:#48D1CC;
+             border-style:solid;
+             border-width:1px;
+             border-color:Black',
+             "geom type",
+             checkboxGroupInput(ns("geom_type_1variable"),
+                                label = NULL, #h3("geom type of 1 variable"),
+                                choices = list(
+                                  "area",
+                                  "density",
+                                  "dotplot",
+                                  "freqploly",
+                                  "histogram",
+                                  "bar",
+                                  "col"
+                                  ),
+                                selected = NULL,
+                                inline=TRUE
+                                ),
+             checkboxGroupInput(ns("geom_type_2variable"),
+                                label = NULL, #h3("geom type"),
+                                choices = list(
+                                  "point",
+                                  "line",
+                                  "ribbon",
+                                  "qq_line",
+                                  "quantile",
+                                  "rug",
+                                  "segment",
+                                  "smooth",
+                                  "text",
+                                  "boxplot",
+                                  "violin",
+                                  "bin2d",
+                                  "density2d",
+                                  "path",
+                                  "step"
+                                ),
+                                selected = c("point","line"),
+                                inline=TRUE
+             ),
+             checkboxGroupInput(ns("geom_type_other"),
+                                label = NULL, #h3("geom type"),
+                                choices = list(
+                                  "crossbar",
+                                  "errorbar",
+                                  "linerange",
+                                  "pointrange",
+                                  "map",
+                                  "contour",
+                                  "raster",
+                                  "tile",
+                                  "polygon",
+                                  "rect"
+                                ),
+                                selected = NULL,
+                                inline=TRUE
+             ),
+             )
+  )
+}
+
 #Data and Plot
 # setup_ui<-function(id="guiplot") {
 #   ns <- NS(id)
@@ -239,6 +304,7 @@ guiplotUI <- fluidPage(
   #Header
   tital_ui("guiplot"),
   toolbar_ui("guiplot"),
+  geom_type_ui("guiplot"),
 
   ####################################
   #Data and Plot

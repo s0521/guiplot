@@ -1,6 +1,8 @@
 #ggplot codes
-geomCode<-function(type,data,x,y,group=NULL){
-	if (is.null(data)||is.null(x)||is.null(y))
+geomCode<-function(type,data,x,y,group=NULL,ymin=NULL,ymax=NULL){
+  # browser()
+	# if (is.null(data)||!is.null(x)||!is.null(y)||!is.null(ymin))
+  if (is.null(data)&&is.null(x)&&is.null(y)&&is.null(ymin))
 		return()
   # browser()
   name<-data
@@ -9,34 +11,41 @@ geomCode<-function(type,data,x,y,group=NULL){
 	x<-GetXText(x)
 	y<-GetYText(y)
 	group<-GetGroupText(group)
-	geomCode<-SetEveryY(type,data,x,y,group)
+	ymin<-GetYText(ymin)
+	ymax<-GetYText(ymax)
+	geomCode<-SetEveryY(type,data,x,y,group,ymin,ymax)
 
 	return(geomCode)
 
 }
 
 #anasisy Y
-SetEveryY<-function(type,data,x,y,group){
-  if(is.null(y))
+SetEveryY<-function(type,data,x,y,group=NULL,ymin=NULL,ymax=NULL){
+  if(is.null(y)&&(is.null(ymin)&&is.null(ymax)))
     return()
-  j<-1L
-  geomCode<-c()
-  for(i in y){
-    geomCode[j]<-GetGeomCode(type,data,x,i,group)
-    j<-j+1
+  if(!is.null(y)){
+    j<-1L
+    geomCode<-c()
+    for(i in y){
+      geomCode[j]<-GetGeomCode(type,data,x,i,group,ymin,ymax)
+      j<-j+1
+    }
+    geomCodes<-paste(geomCode,collapse ="+")
+    geomCodes
+  }else{
+    GetGeomCode(type,data,x,y,group,ymin,ymax)
   }
-  geomCodes<-paste(geomCode,collapse ="+")
-  geomCodes
 }
 
 
 
 #Get ggplot Geom Codes
-GetGeomCode<-function(type,data,x,y,group){
+GetGeomCode<-function(type,data,x,y,group=NULL,ymin=NULL,ymax=NULL){
   if(is.null(type))
     return()
 
-  aes<-paste(sep="","aes","(",x,",",y,",",group,")")
+  ls1<-paste(sep=",",collapse =",",c(x,y,group,ymin,ymax))
+  aes<-paste(sep="","aes","(",ls1,")")
 
   j<-1
   Code<-c()
@@ -78,6 +87,13 @@ GetYText<-function(data){
   if(is.null(data))
   return()
   GetYText<-textp("y",data)
+  GetYText
+}
+GetYText<-function(data){
+  if(is.null(data))
+    return()
+  name<-substitute(data)
+  GetYText<-textp(name,data)
   GetYText
 }
 

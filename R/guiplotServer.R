@@ -1,7 +1,16 @@
 guiplot_tital_Server<- function(input, output, session) {
   observeEvent(input$ColseButton, {
-    stopApp(NULL)
+    stopApp()
   })
+  onStop(function() {
+    stopApp()
+    cat("Session stopped\n")
+    tags$script(HTML(
+      '
+      window.close();
+      '
+      ))
+    })
 }
 
 guiplot_result_Server <- function(input, output, session) {
@@ -13,9 +22,51 @@ guiplot_result_Server <- function(input, output, session) {
 
 guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NULL) {
   # browser()
+
+  #get geom type Codes
+  get_geomtype_codes<- reactive({
+    c(
+      input$geom_type_1variable,
+      input$geom_type_2variable,
+      input$geom_type_other
+    )
+  })
+
+  #get geom Codes
+  get_geom_codes<- reactive({
+    # browser()
+    ls1<-data
+    geom_data_names<-c(datanames)
+    n_data<-length(geom_data_names)
+    data_code<-NULL
+    for (i in 1:n_data){
+      mptable<-data[[i]]
+      dataname<-c(geom_data_names[[i]])
+
+      if((is.null(mptable) )){
+        return()
+      }
+      x<-GetMappingValue(mptable(),2)
+      y<-GetMappingValue(mptable(),3)
+      group<-GetMappingValue(mptable(),4)
+      ymin<-GetMappingValue(mptable(),5)
+      ymax<-GetMappingValue(mptable(),6)
+      # type<-c("point","line")
+      type<-get_geomtype_codes()
+      code<-geomCode(type,dataname,x,y,group,ymin,ymax)
+      if (!is.null(code))
+        data_code[i]<-code
+      cat(file=stderr(), "\n data_code is ",data_code)
+    }
+    data_code<-na.omit(data_code)
+    data_codes<-paste(collapse ="+",data_code)
+    data_codes
+  })
   Panle_Height<-reactive({input$Panle_Height})
   Panle_Width<-reactive({input$Panle_Width})
 
+
+  #get coord codes
   get_coord_trans_codes <- reactive({
     axis_x<-list(
       Scale=input$X_Scale,
@@ -42,6 +93,8 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
     return(a)
   })
 
+
+  #get themes codes
   get_plot_themes_codes <- reactive({
     # browser()
     p_plot_thems<-list(
@@ -55,46 +108,11 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
     return(a)
   })
 
-  get_geomCode<- reactive({
-    # browser()
-    ls1<-data
-    # browser()
-    geom_data_names<-c(datanames)
-    n_data<-length(geom_data_names)
 
-    data_code<-NULL
-    for (i in 1:n_data){
-      # browser()
-      # mptable<-data[[i]]
-      # mptable<-reactive({
-      #   p<-data[i]()
-      #   return(p)})
-      mptable<-data[[i]]
-      dataname<-c(geom_data_names[[i]])
-
-      if((is.null(mptable) )){
-        return()
-      }
-      xvar<-GetMappingValue(mptable(),2)
-      yvar<-GetMappingValue(mptable(),3)
-      group<-GetMappingValue(mptable(),4)
-      type<-c("point","line")
-      # browser()
-      code<-geomCode(type,dataname,xvar,yvar,group)
-      if (!is.null(code))
-      data_code[i]<-geomCode(type,dataname,xvar,yvar,group)
-      # data_codes<-c(data_codes,data_code)
-      cat(file=stderr(), "\n data_code is ",data_code)
-    }
-    data_code<-na.omit(data_code)
-    data_codes<-paste(collapse ="+",data_code)
-    # browser()
-    data_codes
-  })
-
+  #output plot
   output$plot <- renderPlot({
 
-    gg_geom_codes<-get_geomCode()
+    gg_geom_codes<-get_geom_codes()
     cat(file=stderr(), "\n gg_geom_codes is ",gg_geom_codes)
     # browser()
 
