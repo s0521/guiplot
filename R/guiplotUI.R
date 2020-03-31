@@ -140,19 +140,19 @@ setup_tabPanel_panel<-function(id="guiplot") {
   )
 }
 
-setup_tabPanel_name_ui<-function(id="guiplot") {
-  #first Data
-  ns <- NS(id)
-  textOutput(ns('tab1'))
-}
-setup_tabPanel_value_ui<-function(id="guiplot") {
-  #first Data
-  ns <- NS(id)
-  fluidPage(
-    style='float:left',
-    DTOutput(ns('dt'))
-  )
-}
+# setup_tabPanel_name_ui<-function(id="guiplot") {
+#   #first Data
+#   ns <- NS(id)
+#   textOutput(ns('tab1'))
+# }
+# setup_tabPanel_value_ui<-function(id="guiplot") {
+#   #first Data
+#   ns <- NS(id)
+#   fluidPage(
+#     style='float:left',
+#     DTOutput(ns('dt'))
+#   )
+# }
 
 results_ui<-function(id="guiplot") {
   tabPanel("Results Panel",
@@ -218,8 +218,10 @@ object_options_ui<-function(id="guiplot") {
       ),
       tabPanel(
         "Layout",
-        numericInput(ns('Panle_Height'),'Panle Height(mm)',250),
-        numericInput(ns('Panle_Width'),'Panle Width(mm)',500)
+        numericInput(ns('Panle_Height'),'Panle Height(pixels)',250),
+        numericInput(ns('Panle_Width'),'Panle Width(pixels)',500),
+        numericInput(ns('Panle_dpi'),'Panle DPI',300),
+        textOutput(ns('Panle_dpi_output'))
       ),
       tabPanel(
         "Lattice"
@@ -310,9 +312,7 @@ guiplotUI <- fluidPage(
   #Data and Plot
   tabsetPanel(
       tabPanel("Setup Panel",
-
                uiOutput("ui"),
-
                plot_ui("guiplot")
       ),
 

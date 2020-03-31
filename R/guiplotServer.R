@@ -14,9 +14,30 @@ guiplot_tital_Server<- function(input, output, session) {
 }
 
 guiplot_result_Server <- function(input, output, session) {
+  get_dpi<-reactive({input$Panle_dpi})
+
+  pixelratio<- reactive({
+                        pixelratio<-session$clientData$pixelratio
+                        pixelratio
+  })
+
+  use_dpi<- reactive({get_dpi()*pixelratio()})
+  width <- reactive({input$Panle_Width*25.4/use_dpi()*pixelratio()})
+  height <- reactive({input$Panle_Height*25.4/use_dpi()*pixelratio()})
+  units <- reactive({"mm"})
+
   observeEvent(input$ExecuteButton, {
-    ggsave("ggplot.pdf", width = input$Panle_Width, height =input$Panle_Height, units ="mm")
-    ggsave("ggplot.png", dpi=300, width = input$Panle_Width, height =input$Panle_Height, units ="mm")
+    ggsave("ggplot.pdf",
+           width = width(),
+           height =height(),
+           units =units()
+           )
+    ggsave("ggplot.png",
+           dpi=use_dpi(),
+           width = width(),
+           height =height(),
+           units =units()
+           )
   })
 }
 
@@ -62,9 +83,6 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
     data_codes<-paste(collapse ="+",data_code)
     data_codes
   })
-  Panle_Height<-reactive({input$Panle_Height})
-  Panle_Width<-reactive({input$Panle_Width})
-
 
   #get coord codes
   get_coord_trans_codes <- reactive({
@@ -109,9 +127,27 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
   })
 
 
+  # dpi
+  Panle_Height<-reactive({input$Panle_Height})
+  Panle_Width<-reactive({input$Panle_Width})
+  # Panle_dpi<-reactive({input$Panle_dpi})
+  Panle_dpi<-reactive({
+    if(is.null(input$Panle_dpi)||input$Panle_dpi==""){
+      # return(100)
+      return(as.integer(input$Panle_dpi))
+    }else{
+      return(as.integer(input$Panle_dpi))
+    }
+    })
+  output$Panle_dpi_output<-renderText({Panle_dpi()[[1]]})
+  # res_dpi_value<-res_dpi()
+  # browser()
+
+
+
   #output plot
   output$plot <- renderPlot({
-
+    # browser()
     gg_geom_codes<-get_geom_codes()
     cat(file=stderr(), "\n gg_geom_codes is ",gg_geom_codes)
     # browser()
@@ -131,7 +167,21 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
     }else{
       eval(parse_expr(as.character(gg2)))
     }
-  },width = Panle_Width, height =Panle_Height)
+  },
+  width = Panle_Width,
+  height =Panle_Height,
+  res = {
+    if (is.numeric(Panle_dpi)){
+      Panle_dpi()
+      }else{
+        Panle_dpi()
+    }
+  }
+  # cache = "session",
+  # cacheKeyExpr = {
+  #   list( Panle_dpi())
+  # }
+  )
 }
 
 
