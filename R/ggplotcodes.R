@@ -100,10 +100,20 @@ GetYText<-function(data){
 
 
 GetGroupText<-function(data){
+  # browser()
   if(is.null(data))
   return(NULL)
-  GetGroupText<-textp("color",data)
-  GetGroupText
+  n<-length(data)
+  # browser()
+  if(n==1){
+    GetGroupText<-textp("color",data)
+    GetGroupText
+  }else{
+    text<-paste(sep="",collapse=",",c(data))
+    text<-paste(sep="",collapse="","interaction(",text,",","sep = ':'",")")
+    GetGroupText<-textp("color",text)
+    GetGroupText
+  }
 }
 
 #textp int
