@@ -14,16 +14,11 @@ guiplot_tital_Server<- function(input, output, session) {
 }
 
 guiplot_result_Server <- function(input, output, session) {
-  get_dpi<-reactive({input$Panle_dpi})
+  pixelratio<- reactive({session$clientData$pixelratio})
 
-  pixelratio<- reactive({
-                        pixelratio<-session$clientData$pixelratio
-                        pixelratio
-  })
-
-  use_dpi<- reactive({get_dpi()*pixelratio()})
-  width <- reactive({input$Panle_Width*25.4/use_dpi()*pixelratio()})
-  height <- reactive({input$Panle_Height*25.4/use_dpi()*pixelratio()})
+  use_dpi<- reactive({input$Panle_dpi*pixelratio()})
+  width <- reactive({input$Panle_Width*25.4/input$Panle_dpi*pixelratio()})
+  height <- reactive({input$Panle_Height*25.4/input$Panle_dpi*pixelratio()})
   units <- reactive({"mm"})
 
   observeEvent(input$ExecuteButton, {
@@ -145,8 +140,7 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
 
 
 
-  #output plot
-  output$plot <- renderPlot({
+  output$plot <-renderImage({
     # browser()
     gg_geom_codes<-get_geom_codes()
     cat(file=stderr(), "\n gg_geom_codes is ",gg_geom_codes)
@@ -161,27 +155,120 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
     gg2<-c("ggplot() ",gg_geom_codes, gg_coord_code, gg_themes_codes)
     gg2<-paste(sep="+",collapse ="+",gg2)
     cat(file=stderr(), "\n gg2 is ",gg2)
+
+    pixelratio<- reactive({session$clientData$pixelratio})
+    dpi<- reactive({input$Panle_dpi})
+    width <- reactive({input$Panle_Width/25.4*input$Panle_dpi})
+    height <- reactive({input$Panle_Height/25.4*input$Panle_dpi})
+    units <- reactive({"mm"})
+
     # req(gg_geom_codes)
     if (is.null(gg_geom_codes)||gg_geom_codes==""){
         return(ggplot())
     }else{
       eval(parse_expr(as.character(gg2)))
     }
+    ggsave("ggplot.png",
+           dpi=input$Panle_dpi,
+           width = input$Panle_Width,
+           height =input$Panle_Height,
+           units =units()
+    )
+
+    # browser()
+    list(
+      src="ggplot.png",
+      width = width()*pixelratio(),
+      height = height()*pixelratio(),
+      alt = "This is alternate text"
+    )
+
   },
-  width = Panle_Width,
-  height =Panle_Height,
-  res = {
-    if (is.numeric(Panle_dpi)){
-      Panle_dpi()
-      }else{
-        Panle_dpi()
-    }
-  }
+  # width = Panle_Width(),
+  # height =Panle_Height(),
+  )
+  # output$plot <-renderImage({
+  #   # width  <- session$clientData$output_myImage_width
+  #   # height <- session$clientData$output_myImage_height
+  #   pixelratio <- session$clientData$pixelratio
+  #
+  #   # browser()
+  #   gg_geom_codes<-get_geom_codes()
+  #   cat(file=stderr(), "\n gg_geom_codes is ",gg_geom_codes)
+  #   # browser()
+  #
+  #   gg_coord_code<-get_coord_trans_codes()
+  #   cat(file=stderr(), "\n gg_coord_code is ",gg_coord_code)
+  #
+  #   gg_themes_codes<-get_plot_themes_codes()
+  #   cat(file=stderr(), "\n gg_themes_codes is ",gg_themes_codes)
+  #
+  #   gg2<-c("ggplot() ",gg_geom_codes, gg_coord_code, gg_themes_codes)
+  #   gg2<-paste(sep="+",collapse ="+",gg2)
+  #   cat(file=stderr(), "\n gg2 is ",gg2)
+  #   # req(gg_geom_codes)
+  #
+  #   # outfile <-normalizePath(file.path(getwd(),paste('image', "test", '.png', sep='')))
+  #   outfile <-"ggplot.png"
+  #   # browser()
+  #   # png(outfile, width = Panle_Width()*pixelratio, height = Panle_Height()*pixelratio,res = 72*pixelratio)
+  #   # # browser()
+  #   if (is.null(gg_geom_codes)||gg_geom_codes==""){
+  #     return(ggplot())
+  #     # dev.off()
+  #   }else{
+  #     eval(parse_expr(as.character(gg2)))
+  #     # dev.off()
+  #   }
+  #   ggsave("ggplot.png",
+  #          dpi=input$Panle_dpi*pixelratio,
+  #          width = Panle_Width()*pixelratio,
+  #          height = Panle_Height()*pixelratio,
+  #          units ="mm"
+  #   )
+  #
+  #   list(src = outfile,
+  #        width = Panle_Width()*pixelratio,
+  #        height = Panle_Height()*pixelratio,
+  #        alt = "This is alternate text")
+  # },deleteFile = TRUE)
+  #output plot
+  # output$plot <- renderPlot({
+  #   # browser()
+  #   gg_geom_codes<-get_geom_codes()
+  #   cat(file=stderr(), "\n gg_geom_codes is ",gg_geom_codes)
+  #   # browser()
+  #
+  #   gg_coord_code<-get_coord_trans_codes()
+  #   cat(file=stderr(), "\n gg_coord_code is ",gg_coord_code)
+  #
+  #   gg_themes_codes<-get_plot_themes_codes()
+  #   cat(file=stderr(), "\n gg_themes_codes is ",gg_themes_codes)
+  #
+  #   gg2<-c("ggplot() ",gg_geom_codes, gg_coord_code, gg_themes_codes)
+  #   gg2<-paste(sep="+",collapse ="+",gg2)
+  #   cat(file=stderr(), "\n gg2 is ",gg2)
+  #   # req(gg_geom_codes)
+  #   if (is.null(gg_geom_codes)||gg_geom_codes==""){
+  #       return(ggplot())
+  #   }else{
+  #     eval(parse_expr(as.character(gg2)))
+  #   }
+  # },
+  # width = Panle_Width,
+  # height =Panle_Height,
+  # res = {
+  #   if (is.numeric(Panle_dpi)){
+  #     Panle_dpi()
+  #     }else{
+  #       Panle_dpi()
+  #   }
+  # }
   # cache = "session",
   # cacheKeyExpr = {
   #   list( Panle_dpi())
   # }
-  )
+  # )
 }
 
 
