@@ -22,11 +22,16 @@ guiplot_result_Server <- function(input, output, session) {
   })
 
   use_dpi<- reactive({get_dpi()*pixelratio()})
-  width <- reactive({input$Panle_Width*25.4/use_dpi()*pixelratio()})
-  height <- reactive({input$Panle_Height*25.4/use_dpi()*pixelratio()})
+  width <- reactive({input$Panle_Width/1312.530*500})
+  height <- reactive({input$Panle_Height/1312.530*500})
   units <- reactive({"mm"})
 
   observeEvent(input$ExecuteButton, {
+    ggsave("ggplot.svg",
+           width = width(),
+           height =height(),
+           units =units()
+    )
     ggsave("ggplot.pdf",
            width = width(),
            height =height(),
@@ -126,27 +131,7 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
     return(a)
   })
 
-
-  # dpi
-  Panle_Height<-reactive({input$Panle_Height})
-  Panle_Width<-reactive({input$Panle_Width})
-  # Panle_dpi<-reactive({input$Panle_dpi})
-  Panle_dpi<-reactive({
-    if(is.null(input$Panle_dpi)||input$Panle_dpi==""){
-      # return(100)
-      return(as.integer(input$Panle_dpi))
-    }else{
-      return(as.integer(input$Panle_dpi))
-    }
-    })
-  output$Panle_dpi_output<-renderText({Panle_dpi()[[1]]})
-  # res_dpi_value<-res_dpi()
-  # browser()
-
-
-
-  #output plot
-  output$plot <- renderPlot({
+  get_plot_codes <- reactive({
     # browser()
     gg_geom_codes<-get_geom_codes()
     cat(file=stderr(), "\n gg_geom_codes is ",gg_geom_codes)
@@ -163,25 +148,55 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
     cat(file=stderr(), "\n gg2 is ",gg2)
     # req(gg_geom_codes)
     if (is.null(gg_geom_codes)||gg_geom_codes==""){
-        return(ggplot())
+        # return(ggplot())
+      return("ggplot()")
     }else{
-      eval(parse_expr(as.character(gg2)))
+      # eval(parse_expr(as.character(gg2)))
+      gg2
     }
-  },
-  width = Panle_Width,
-  height =Panle_Height,
-  res = {
-    if (is.numeric(Panle_dpi)){
-      Panle_dpi()
-      }else{
-        Panle_dpi()
+  })
+
+  # dpi
+  Panle_Height<-reactive({input$Panle_Height})
+  Panle_Width<-reactive({input$Panle_Width})
+  # Panle_dpi<-reactive({input$Panle_dpi})
+  Panle_dpi<-reactive({
+    if(is.null(input$Panle_dpi)||input$Panle_dpi==""){
+      # return(100)
+      return(as.integer(input$Panle_dpi))
+    }else{
+      return(as.integer(input$Panle_dpi))
     }
-  }
-  # cache = "session",
-  # cacheKeyExpr = {
-  #   list( Panle_dpi())
-  # }
-  )
+    })
+  # output$Panle_dpi_output<-renderText({Panle_dpi()[[1]]})
+  # res_dpi_value<-res_dpi()
+  # browser()
+
+  output$plot <- renderImage({
+    pixelratio<- reactive({session$clientData$pixelratio})
+    use_dpi<- reactive({get_dpi()*pixelratio()})
+    width <- reactive({input$Panle_Width})
+    height <- reactive({input$Panle_Height})
+    units <- reactive({"mm"})
+
+    eval(parse_expr(as.character(get_plot_codes())))
+    ggsave("ggplot.svg",
+           width = width(),
+           height =height(),
+           units =units(),
+           dpi =30,
+           scale = 0.3
+    )
+   list(
+     src = "ggplot.svg",
+     # contentType = "image/png",
+     width = width(),
+     height =height(),
+     alt = "This is alternate text"
+   )
+  })
+  #output plot
+
 }
 
 
