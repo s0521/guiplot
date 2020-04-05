@@ -14,34 +14,34 @@ guiplot_tital_Server<- function(input, output, session) {
 }
 
 guiplot_result_Server <- function(input, output, session) {
-  get_dpi<-reactive({input$Panle_dpi})
-
-  pixelratio<- reactive({
-                        pixelratio<-session$clientData$pixelratio
-                        pixelratio
-  })
-
-  use_dpi<- reactive({get_dpi()*pixelratio()})
-  width <- reactive({input$Panle_Width/1312.530*500})
-  height <- reactive({input$Panle_Height/1312.530*500})
-  units <- reactive({"mm"})
+  # pixelratio<- reactive({session$clientData$pixelratio})
+  # web_plot_width <- reactive({input$web_plot_width})
+  # web_plot_height <- reactive({input$web_plot_height})
+  # web_plot_scale <- reactive({input$web_plot_scale})
+  # output_plot_width <- reactive({input$output_plot_width})
+  # output_plot_height <- reactive({input$output_plot_height})
+  # output_plot_dpi <- reactive({input$output_plot_dpi})
+  units <- reactive({"cm"})
 
   observeEvent(input$ExecuteButton, {
     ggsave("ggplot.svg",
-           width = width(),
-           height =height(),
-           units =units()
+           width = input$output_plot_width,
+           height =input$output_plot_height,
+           units =units(),
+           scale = input$web_plot_scale
     )
     ggsave("ggplot.pdf",
-           width = width(),
-           height =height(),
-           units =units()
+           width = input$output_plot_width,
+           height =input$output_plot_height,
+           units =units(),
+           scale = input$web_plot_scale
            )
     ggsave("ggplot.png",
-           dpi=use_dpi(),
-           width = width(),
-           height =height(),
-           units =units()
+           dpi=input$output_plot_dpi,
+           width = input$output_plot_width,
+           height =input$output_plot_height,
+           units =units(),
+           scale = input$web_plot_scale
            )
   })
 }
@@ -156,47 +156,29 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
     }
   })
 
-  # dpi
-  Panle_Height<-reactive({input$Panle_Height})
-  Panle_Width<-reactive({input$Panle_Width})
-  # Panle_dpi<-reactive({input$Panle_dpi})
-  Panle_dpi<-reactive({
-    if(is.null(input$Panle_dpi)||input$Panle_dpi==""){
-      # return(100)
-      return(as.integer(input$Panle_dpi))
-    }else{
-      return(as.integer(input$Panle_dpi))
-    }
-    })
-  # output$Panle_dpi_output<-renderText({Panle_dpi()[[1]]})
-  # res_dpi_value<-res_dpi()
-  # browser()
-
   output$plot <- renderImage({
-    pixelratio<- reactive({session$clientData$pixelratio})
-    use_dpi<- reactive({get_dpi()*pixelratio()})
-    width <- reactive({input$Panle_Width})
-    height <- reactive({input$Panle_Height})
-    units <- reactive({"mm"})
+    # pixelratio<- reactive({session$clientData$pixelratio})
+    # web_plot_width <- reactive({input$web_plot_width})
+    # web_plot_height <- reactive({input$web_plot_height})
+    # web_plot_scale <- reactive({input$web_plot_scale})
+    # output_plot_width <- reactive({input$output_plot_width})
+    # output_plot_height <- reactive({input$output_plot_height})
+    # output_plot_dpi <- reactive({input$output_plot_dpi})
 
     eval(parse_expr(as.character(get_plot_codes())))
     ggsave("ggplot.svg",
-           width = width(),
-           height =height(),
-           units =units(),
-           dpi =30,
-           scale = 0.3
+           width = input$output_plot_width,
+           height =input$output_plot_height,
+           units ="cm",
+           scale = input$web_plot_scale
     )
    list(
      src = "ggplot.svg",
-     # contentType = "image/png",
-     width = width(),
-     height =height(),
-     alt = "This is alternate text"
+     width = input$web_plot_width*session$clientData$pixelratio,
+     height =input$web_plot_height*session$clientData$pixelratio,
+     alt = "This is preview plot"
    )
   })
-  #output plot
-
 }
 
 
@@ -281,7 +263,41 @@ guiplot_dt_Server <- function(input, output, session, data1 =NULL,colname=NULL) 
 	                return(a)
 	              })))
 }
+guiplot_layout_updata_server<-function(input, output, session){
+  x<-reactive({input$web_plot_height/input$web_plot_width})
+  observeEvent(input$web_plot_height,
+               {
+                 updateNumericInput(session,
+                                    "output_plot_height",
+                                    value = round(x()*input$output_plot_width,2)
+                 )
 
+               })
+
+  observeEvent(input$web_plot_width,
+               {
+                 updateNumericInput(session,
+                                    "output_plot_height",
+                                    value = round(x()*input$output_plot_width,2)
+                 )
+               })
+
+  observeEvent(input$output_plot_height,
+               {
+                 updateNumericInput(session,
+                                    "output_plot_width",
+                                    value = round(input$output_plot_height/x(),2)
+                 )
+               })
+
+  observeEvent(input$output_plot_width,
+               {
+                 updateNumericInput(session,
+                                    "output_plot_height",
+                                    value = round(x()*input$output_plot_width,2)
+                 )
+               })
+}
 callback <- c(
   "var tbl = $(table.table().node());",
   "var id = tbl.closest('.datatables').attr('id');",

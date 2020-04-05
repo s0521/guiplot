@@ -105,6 +105,11 @@ guiplotServer = function(input, output, session) {
     dataname=res_data[,2]
   )
 
+  callModule(
+    module =   guiplot_layout_updata_server,
+    id = "guiplot"
+  )
+
 }
 
   runGadget(

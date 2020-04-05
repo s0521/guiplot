@@ -57,8 +57,8 @@ geom_type_ui<-function(id="guiplot"){
              checkboxGroupInput(ns("geom_type_2variable"),
                                 label = NULL, #h3("geom type"),
                                 choices = list(
-                                  "point",
                                   "line",
+                                  "point",
                                   "ribbon",
                                   "qq_line",
                                   "quantile",
@@ -218,10 +218,25 @@ object_options_ui<-function(id="guiplot") {
       ),
       tabPanel(
         "Layout",
-        numericInput(ns('Panle_Height'),'Panle Height(pixels)',250),
-        numericInput(ns('Panle_Width'),'Panle Width(pixels)',500),
-        numericInput(ns('Panle_dpi'),'Panle DPI',300),
-        textOutput(ns('Panle_dpi_output'))
+        tagList(
+          fluidRow(
+            column(3,
+                   "Preview Plot Set(pixels)",
+                   numericInput(ns('web_plot_height'),'web plot height(pixels)',250),
+                   numericInput(ns('web_plot_width'),'web plot width(pixels)',500),
+                   numericInput(ns('web_plot_scale'),'web plot scale',1,min = 0.1, max = 100, step = 0.1)
+            ),
+            column(3,
+                   "Output Plot Set(cm)",
+                   numericInput(ns('output_plot_height'),'output plot height(cm)',4),
+                   numericInput(ns('output_plot_width'),'output plot width(cm)',8),
+                   numericInput(ns('output_plot_dpi'),'output plot DPI',300)
+            ),
+            column(3,
+                   numericInput(ns('Outer_Margin'),'Outer Margin',0)
+            )
+          )
+        )
       ),
       tabPanel(
         "Lattice"
