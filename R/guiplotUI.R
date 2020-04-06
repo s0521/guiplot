@@ -2,32 +2,68 @@
 tital_ui<-function(id="guiplot"){
   ns <- NS(id)
   tagList(
-    fluidRow(style='background-color:#48D1CC;
-             border-style:solid;
-             border-width:1px;
-             border-color:Black',
-	"guiplot:User-friendly R programming language ploting tools")
+    fluidRow(style='
+              background-color:#48D1CC;
+             ',
+              "guiplot:User-friendly R programming language ploting tools"
+             ),
+    fixedRow(style='
+              background-color:#48D1CC;
+              border-style:solid;
+              border-width:1px;
+              border-color:Black;
+              position: fixed;
+              top: 0px;
+              z-index:9;
+              width:100%;
+             ',
+             column(12,"guiplot:User-friendly R programming language ploting tools"))
   )
 }
 
 toolbar_ui<-function(id="guiplot"){
   ns <- NS(id)
   tagList(
+    fluidRow('!--toolbar_ui',
+             style='background-color:#48D1CC;
+             height:35px
+             ',
+             ),
     fluidRow(style='background-color:#48D1CC;
-             border-style:solid;
-             border-width:1px;
-             border-color:Black',
-	  column(6,'toolbar_ui'),
-      column(3,actionButton(
-        ns("ExecuteButton"),
-        "Execute!",
-        style='color:Black;background-color:LimeGreen;font-weight:bold;border-color:Black'
-        )),
-      column(3,actionButton(
-        ns("ColseButton"),
-        "Finish and Close",
-        style='color:Black;background-color:Darkorange;font-weight:bold;border-color:Black'
-        ))
+               border-style:solid;
+               border-width:1px;
+               border-color:Black;
+               position: fixed;
+               top: 20px;
+               z-index:10;
+               width:100%;
+             ',
+            'toolbar_ui'
+
+            ,actionButton(
+              ns("ColseButton"),
+              "02.Finish and Close",
+              style='
+                color:Black;
+                background-color:Darkorange;
+                font-weight:bold;
+                border-color:Black;
+                float:right;
+              '
+            )
+
+            ,actionButton(
+              ns("ExecuteButton"),
+              "01.Execute!",
+              style='
+                color:Black;
+                background-color:LimeGreen;
+                font-weight:bold;
+                border-color:Black;
+                float:right;
+              '
+            )
+
     )
   )
 }
@@ -224,11 +260,11 @@ object_options_ui<-function(id="guiplot") {
                    "Preview Plot Set(pixels)",
                    numericInput(ns('web_plot_height'),'web plot height(pixels)',250),
                    numericInput(ns('web_plot_width'),'web plot width(pixels)',500),
-                   numericInput(ns('web_plot_scale'),'web plot scale',1,min = 0.1, max = 100, step = 0.1)
+                   numericInput(ns('web_plot_scale'),'web plot scale',2,min = 0.1, max = 100, step = 0.1)
             ),
             column(3,
                    "Output Plot Set(cm)",
-                   numericInput(ns('output_plot_height'),'output plot height(cm)',4),
+                   numericInput(ns('output_plot_height'),label='output plot height(cm)',4,max=4,min=4),
                    numericInput(ns('output_plot_width'),'output plot width(cm)',8),
                    numericInput(ns('output_plot_dpi'),'output plot DPI',300)
             ),

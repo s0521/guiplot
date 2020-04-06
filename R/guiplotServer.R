@@ -267,34 +267,50 @@ guiplot_layout_updata_server<-function(input, output, session){
   x<-reactive({input$web_plot_height/input$web_plot_width})
   observeEvent(input$web_plot_height,
                {
+                 new<-isolate(input$output_plot_width)
+                 value <- round(x()*new,2)
                  updateNumericInput(session,
                                     "output_plot_height",
-                                    value = round(x()*input$output_plot_width,2)
+                                    'output plot width(cm)',
+                                    value = value,
+                                    max<- value,
+                                    min<- value
                  )
 
                })
 
   observeEvent(input$web_plot_width,
                {
+                 new<-isolate(input$output_plot_width)
+                 value <- round(x()*new,2)
                  updateNumericInput(session,
                                     "output_plot_height",
-                                    value = round(x()*input$output_plot_width,2)
+                                    'output plot width(cm)',
+                                    value = value,
+                                    max<- value,
+                                    min<- value
                  )
                })
 
-  observeEvent(input$output_plot_height,
-               {
-                 updateNumericInput(session,
-                                    "output_plot_width",
-                                    value = round(input$output_plot_height/x(),2)
-                 )
-               })
+  # observeEvent(input$output_plot_height,
+  #              {
+  #                new<-isolate(input$output_plot_height)
+  #                updateNumericInput(session,
+  #                                   "output_plot_width",
+  #                                   value = round(new/x(),2)
+  #                )
+  #              })
 
   observeEvent(input$output_plot_width,
                {
+                 new<-isolate(input$output_plot_width)
+                 value <- round(x()*new,2)
                  updateNumericInput(session,
                                     "output_plot_height",
-                                    value = round(x()*input$output_plot_width,2)
+                                    'output plot width(cm)',
+                                    value = value,
+                                    max<- value,
+                                    min<- value
                  )
                })
 }
