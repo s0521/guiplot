@@ -5,8 +5,8 @@
 #' @title guiplot
 #' @param ... Matrix or data frame
 #' @export
-#' @return code to reproduce chart.
-#' @import shiny ggplot2
+#' @return png and pdf of plot
+#' @import shiny ggplot2 svglite
 #' @importFrom DT datatable DTOutput renderDT JS editData
 #' @importFrom rlang parse_expr expr
 #' @importFrom stats na.omit

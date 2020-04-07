@@ -7,7 +7,8 @@ Maintainer: Fu yongchao <3212418315@qq.com>
 Description: R is a very anti-human language. 
     The package aims to improve this dilemma and create a user-friendly drawing GUI for R.
     In addition, one purpose of creating the R package is to facilitate third-party software to call R for drawing, for example, "Phoenix WinNonlin" software calls R to draw the drug concentration versus time curve.
-Imports: DT, shiny(>= 1.0.0), miniUI, ggplot2 (>= 3.0.0), rlang (>= 0.3.1)
+URL: https://s0521.github.io/guiplot/about/
+Imports: shiny(>= 1.0.0), ggplot2 (>= 3.0.0), svglite, DT, rlang (>= 0.3.1),stats
 License: MIT + file LICENSE
 Depends: R (>= 3.6.0)
 Encoding: UTF-8

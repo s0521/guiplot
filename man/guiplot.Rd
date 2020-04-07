@@ -10,7 +10,7 @@ guiplot(...)
 \item{...}{Matrix or data frame}
 }
 \value{
-code to reproduce chart.
+png and pdf of plot
 }
 \description{
 guiplot
@@ -18,5 +18,8 @@ guiplot
 \examples{
 \dontrun{
 guiplot(PK)
+}
+\dontrun{
+guiplot()
 }
 }
