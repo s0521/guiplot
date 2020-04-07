@@ -3,13 +3,8 @@ guiplot_tital_Server<- function(input, output, session) {
     stopApp()
   })
   onStop(function() {
-    stopApp()
+    # stopApp()
     cat("Session stopped\n")
-    tags$script(HTML(
-      '
-      window.close();
-      '
-      ))
     })
 }
 
@@ -192,6 +187,21 @@ guiplot_dt_Server <- function(input, output, session, data1 =NULL,colname=NULL) 
 	#
 	dat<-Tint(mpm(data,colna),1)
 
+	#container
+	sketch <- htmltools::withTags(table(
+	  class = 'display',
+	  thead(
+	    tr(
+	      th(rowspan = 2, ''),
+	      th(colspan = 2, 'PlotData'),
+	      th(colspan = 2, 'Group By'),
+	      th(colspan = 2, 'Latice')
+	    ),
+	    tr(
+	      lapply(colna, th)
+	    )
+	  )
+	))
 	#################################
 	########render output############
 	#################################
@@ -207,13 +217,16 @@ guiplot_dt_Server <- function(input, output, session, data1 =NULL,colname=NULL) 
 		selection = list(mode = 'single', target = 'cell'),
 		callback = JS(callback),
 		extensions = c('AutoFill'),
-		options = list(autoFill = list(horizontal=FALSE,vertical=TRUE,alwaysAsk=FALSE),
-		autoWidth = TRUE,
-		columnDefs = list(
-		  list(width = '20px', targets = 1:ncol(dat)),
-		  list(className = 'dt-center', targets = 1:ncol(dat))
-		  ),
-		dom = 't',paging = FALSE, ordering = FALSE)
+		container =sketch,
+		options = list(
+		  autoFill = list(horizontal=FALSE,vertical=TRUE,alwaysAsk=FALSE),
+  		autoWidth = TRUE,
+  		columnDefs = list(
+  		  list(width = '20px', targets = 1:ncol(dat)),
+  		  list(className = 'dt-center', targets = 1:ncol(dat))
+  		  ),
+  		dom = 't',paging = FALSE, ordering = FALSE
+		)
 	)#%>% formatStyle(colna, cursor = 'pointer')
 	})
 
