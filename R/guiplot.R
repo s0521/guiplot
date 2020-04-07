@@ -3,18 +3,21 @@
 #shiny runGadget callModule browserViewer plotOutput textOutput actionButton NS fluidPage navlistPanel tabPanel tagList fluidRow column
 #'
 #' @title guiplot
-#' @param data Matrix or data frame
+#' @param ... Matrix or data frame
 #' @export
 #' @return code to reproduce chart.
-#' @import shiny ggplot2 shinydashboard
+#' @import shiny ggplot2
 #' @importFrom DT datatable DTOutput renderDT JS editData
 #' @importFrom rlang parse_expr expr
+#' @importFrom stats na.omit
 #'
 #' @examples
 #' \dontrun{
 #' guiplot(PK)
 #' }
-
+#' \dontrun{
+#' guiplot()
+#' }
 guiplot <- function(...) {
   ########################################################
   #Obtaining and Specifying the Data and Parameters Needed

@@ -7,7 +7,7 @@
 guiplot(...)
 }
 \arguments{
-\item{data}{Matrix or data frame}
+\item{...}{Matrix or data frame}
 }
 \value{
 code to reproduce chart.
