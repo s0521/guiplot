@@ -1,5 +1,5 @@
 #ggplot codes
-geomCode<-function(type,data,x,y,ymin=NULL,ymax=NULL,group=NULL){
+geomCode<-function(type,data,x,y,ymin=NULL,ymax=NULL,group=NULL,color=NULL,linetype=NULL,shape=NULL){
   # browser()
 	# if (is.null(data)||!is.null(x)||!is.null(y)||!is.null(ymin))
   if (is.null(data)&&is.null(x)&&is.null(y)&&is.null(ymin))
@@ -10,41 +10,44 @@ geomCode<-function(type,data,x,y,ymin=NULL,ymax=NULL,group=NULL){
 	data<-GetDataText(name)
 	x<-GetXText(x)
 	y<-GetYText(y)
-	group<-GetGroupText(group)
 	ymin<-GetYText(ymin)
 	ymax<-GetYText(ymax)
-	geomCode<-SetEveryY(type,data,x,y,group,ymin,ymax)
+	group<-GetGroupText(group)
+	color<-GetGroupText(color)
+	linetype<-GetGroupText(linetype)
+	shape<-GetGroupText(shape)
+	geomCode<-SetEveryY(type,data,x,y,ymin,ymax,group,color,linetype,shape)
 
 	return(geomCode)
 
 }
 
 #anasisy Y
-SetEveryY<-function(type,data,x,y,group=NULL,ymin=NULL,ymax=NULL){
+SetEveryY<-function(type,data,x,y,ymin=NULL,ymax=NULL,group=NULL,color=NULL,linetype=NULL,shape=NULL){
   if(is.null(y)&&(is.null(ymin)&&is.null(ymax)))
     return()
   if(!is.null(y)){
     j<-1L
     geomCode<-c()
     for(i in y){
-      geomCode[j]<-GetGeomCode(type,data,x,i,group,ymin,ymax)
+      geomCode[j]<-GetGeomCode(type,data,x,i,ymin,ymax,group,color,linetype,shape)
       j<-j+1
     }
     geomCodes<-paste(geomCode,collapse ="+")
     geomCodes
   }else{
-    GetGeomCode(type,data,x,y,group,ymin,ymax)
+    GetGeomCode(type,data,x,y,ymin,ymax,group,color,linetype,shape)
   }
 }
 
 
 
 #Get ggplot Geom Codes
-GetGeomCode<-function(type,data,x,y,group=NULL,ymin=NULL,ymax=NULL){
+GetGeomCode<-function(type,data,x,y,ymin=NULL,ymax=NULL,group=NULL,color=NULL,linetype=NULL,shape=NULL){
   if(is.null(type))
     return()
-
-  ls1<-paste(sep=",",collapse =",",c(x,y,group,ymin,ymax))
+  # browser()
+  ls1<-paste(sep=",",collapse =",",c(x,y,ymin,ymax,group,color,linetype,shape))
   aes<-paste(sep="","aes","(",ls1,")")
 
   j<-1
@@ -83,12 +86,12 @@ GetXText<-function(data){
 
 
 
-GetYText<-function(data){
-  if(is.null(data))
-  return()
-  GetYText<-textp("y",data)
-  GetYText
-}
+# GetYText<-function(data){
+#   if(is.null(data))
+#   return()
+#   GetYText<-textp("y",data)
+#   GetYText
+# }
 GetYText<-function(data){
   if(is.null(data))
     return()
@@ -104,14 +107,15 @@ GetGroupText<-function(data){
   if(is.null(data))
   return(NULL)
   n<-length(data)
+  name<-substitute(data)
   # browser()
   if(n==1){
-    GetGroupText<-textp("color",data)
+    GetGroupText<-textp(name,data)
     GetGroupText
   }else{
     text<-paste(sep="",collapse=",",c(data))
     text<-paste(sep="",collapse="","interaction(",text,",","sep = ':'",")")
-    GetGroupText<-textp("color",text)
+    GetGroupText<-textp(name,text)
     GetGroupText
   }
 }

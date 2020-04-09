@@ -1,4 +1,31 @@
-#ggplot codes
+#ggplot facets codes
+facets_code<-function(cols,rows){
+  if (is.null(cols)&&is.null(rows))
+    return()
+  cols<-GetFacetGridText(cols)
+  rows<-GetFacetGridText(rows)
+  text<-paste(sep="",collapse=",","facet_grid(",c(cols,rows),")")
+  return(text)
+}
+GetFacetGridText<-function(data){
+  # browser()
+  if(is.null(data))
+    return(NULL)
+  n<-length(data)
+  name<-substitute(data)
+  # browser()
+  if(n==1){
+    FacetGridText<-paste(sep="",collapse="",name,"=","(","vars","(",data,")",")")
+    FacetGridText
+  }else{
+    text<-paste(sep="",collapse=",",c(data))
+    text<-paste(sep="",collapse="","interaction(",text,",","sep = ':'",")")
+    FacetGridText<-paste(sep="",collapse="",name,"=","(","vars","(",text,")",")")
+    FacetGridText
+  }
+}
+
+#ggplot axis codes
 coord_trans_code<-function(axis_x,axis_y){
 	if (is.null(axis_x)||is.null(axis_x))
 		return()

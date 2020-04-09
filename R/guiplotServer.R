@@ -3,7 +3,7 @@ guiplot_tital_Server<- function(input, output, session) {
     stopApp()
   })
   onStop(function() {
-    # stopApp()
+    stopApp()
     cat("Session stopped\n")
     })
 }
@@ -73,16 +73,59 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
       ymin<-GetMappingValue(mptable(),4)
       ymax<-GetMappingValue(mptable(),5)
       group<-GetMappingValue(mptable(),8)
+      color<-GetMappingValue(mptable(),9)
+      linetype<-GetMappingValue(mptable(),10)
+      mark<-GetMappingValue(mptable(),11)
       # type<-c("point","line")
       type<-get_geomtype_codes()
-      code<-geomCode(type,dataname,x,y,ymin,ymax,group)
+      code<-geomCode(
+        type=type,
+        data=dataname,
+        x=x,
+        y=y,
+        ymin=ymin,
+        ymax=ymax,
+        group=group,
+        color=color,
+        linetype=linetype,
+        shape=mark
+        )
       if (!is.null(code))
         data_code[i]<-code
-      cat(file=stderr(), "\n data_code is ",data_code)
+      # cat(file=stderr(), "\n data_code is ",data_code)
     }
     data_code<-na.omit(data_code)
     data_codes<-paste(collapse ="+",data_code)
     data_codes
+  })
+
+  #get facets codes
+  get_facets_codes<-reactive({
+    # browser()
+    ls1<-data
+    geom_data_names<-c(datanames)
+    n_data<-length(geom_data_names)
+    facets_codes<-NULL
+    for (i in 1:n_data){
+      mptable<-data[[i]]
+      dataname<-c(geom_data_names[[i]])
+
+      if((is.null(mptable) )){
+        return()
+      }
+      cols<-GetMappingValue(mptable(),6)
+      rows<-GetMappingValue(mptable(),7)
+      code<-facets_code(
+        cols=cols,
+        rows=rows
+      )
+      if (!is.null(code))
+        facets_codes[i]<-code
+      # cat(file=stderr(), "\n facets_code is ",facets_code)
+      facets_codes<-na.omit(facets_codes)
+      # browser()
+      return(facets_codes)
+    }
   })
 
   #get coord codes
@@ -107,7 +150,6 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
     # browser()
     if(nchar(a)<17)
       return()
-
     # return(coord_trans_code(axis_x,axis_y))
     return(a)
   })
@@ -139,7 +181,10 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
     gg_themes_codes<-get_plot_themes_codes()
     cat(file=stderr(), "\n gg_themes_codes is ",gg_themes_codes)
 
-    gg2<-c("ggplot() ",gg_geom_codes, gg_coord_code, gg_themes_codes)
+    gg_facets_codes<-get_facets_codes()
+    cat(file=stderr(), "\n gg_facets_codes is ",gg_facets_codes)
+
+    gg2<-c("ggplot() ",gg_geom_codes, gg_coord_code, gg_themes_codes,gg_facets_codes)
     gg2<-paste(sep="+",collapse ="+",gg2)
     cat(file=stderr(), "\n gg2 is ",gg2)
     # req(gg_geom_codes)

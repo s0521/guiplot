@@ -22,7 +22,7 @@ guiplot <- function(...) {
   ########################################################
   #Obtaining and Specifying the Data and Parameters Needed
   # colna<-c("none","x","y","group","ymin","ymax")
-  colna<-c("none","x","y","ymin","ymax","column","row","group","color","line","mark")
+  colna<-c("none","x","y","ymin","ymax","column","row","group","color","linetype","mark")
 
   get_data_arry<-function(...){
     # browser()
