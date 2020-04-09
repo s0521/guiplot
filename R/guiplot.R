@@ -7,10 +7,10 @@
 #' @export
 #' @return png and pdf of plot
 #' @import shiny ggplot2 svglite
-#' @importFrom DT datatable DTOutput renderDT JS editData
+#' @importFrom DT datatable DTOutput renderDT JS editData formatStyle
 #' @importFrom rlang parse_expr expr
-#' @importFrom stats na.omit
-#'
+#'  stats na.omit
+#' @importFrom magrittr %>%
 #' @examples
 #' \dontrun{
 #' guiplot(PK)
@@ -21,7 +21,8 @@
 guiplot <- function(...) {
   ########################################################
   #Obtaining and Specifying the Data and Parameters Needed
-  colna<-c("none","x","y","group","ymin","ymax")
+  # colna<-c("none","x","y","group","ymin","ymax")
+  colna<-c("none","x","y","ymin","ymax","column","row","group","color","line","mark")
 
   get_data_arry<-function(...){
     # browser()
@@ -51,6 +52,7 @@ guiplot <- function(...) {
 guiplotServer = function(input, output, session) {
   # Panl_Height<-reactive({input$Panle_Height})
   # Panl_Width<-reactive({input$Panle_Width})
+  # browser()
   callModule(
     module = guiplot_tital_Server,
     id = "guiplot"

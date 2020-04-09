@@ -1,5 +1,5 @@
 #ggplot codes
-geomCode<-function(type,data,x,y,group=NULL,ymin=NULL,ymax=NULL){
+geomCode<-function(type,data,x,y,ymin=NULL,ymax=NULL,group=NULL){
   # browser()
 	# if (is.null(data)||!is.null(x)||!is.null(y)||!is.null(ymin))
   if (is.null(data)&&is.null(x)&&is.null(y)&&is.null(ymin))

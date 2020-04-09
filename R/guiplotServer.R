@@ -69,12 +69,13 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
       }
       x<-GetMappingValue(mptable(),2)
       y<-GetMappingValue(mptable(),3)
-      group<-GetMappingValue(mptable(),4)
-      ymin<-GetMappingValue(mptable(),5)
-      ymax<-GetMappingValue(mptable(),6)
+
+      ymin<-GetMappingValue(mptable(),4)
+      ymax<-GetMappingValue(mptable(),5)
+      group<-GetMappingValue(mptable(),8)
       # type<-c("point","line")
       type<-get_geomtype_codes()
-      code<-geomCode(type,dataname,x,y,group,ymin,ymax)
+      code<-geomCode(type,dataname,x,y,ymin,ymax,group)
       if (!is.null(code))
         data_code[i]<-code
       cat(file=stderr(), "\n data_code is ",data_code)
@@ -193,9 +194,9 @@ guiplot_dt_Server <- function(input, output, session, data1 =NULL,colname=NULL) 
 	  thead(
 	    tr(
 	      th(rowspan = 2, ''),
-	      th(colspan = 2, 'PlotData'),
-	      th(colspan = 2, 'Group By'),
-	      th(colspan = 2, 'Latice')
+	      th(colspan = 5, class='sorting_disabled dt-center',style='border-right: dashed;','Plot Data'),
+	      th(colspan = 2, class='sorting_disabled dt-center',style='border-right: solid;', 'Lattice By'),
+	      th(colspan = 4, class='sorting_disabled dt-center', 'Group By')
 	    ),
 	    tr(
 	      lapply(colna, th)
@@ -207,27 +208,32 @@ guiplot_dt_Server <- function(input, output, session, data1 =NULL,colname=NULL) 
 	#################################
 	#table name first data
 	output$tab1 <-renderText(dataname)
-
+	# browser()
 	#DataTable
 	output$dt = renderDT({
 
-	datatable(dat,
-		rownames = TRUE,width=100 ,
-		# editable = list(target = "cell"),
-		selection = list(mode = 'single', target = 'cell'),
-		callback = JS(callback),
-		extensions = c('AutoFill'),
-		container =sketch,
-		options = list(
-		  autoFill = list(horizontal=FALSE,vertical=TRUE,alwaysAsk=FALSE),
-  		autoWidth = TRUE,
-  		columnDefs = list(
-  		  list(width = '20px', targets = 1:ncol(dat)),
-  		  list(className = 'dt-center', targets = 1:ncol(dat))
-  		  ),
-  		dom = 't',paging = FALSE, ordering = FALSE
-		)
-	)#%>% formatStyle(colna, cursor = 'pointer')
+	  # browser()
+	  datatable(
+	    dat,
+  		rownames = TRUE,width=100 ,
+  		# editable = list(target = "cell"),
+  		selection = list(mode = 'single', target = 'cell'),
+  		callback = JS(callback),
+  		extensions = c('AutoFill'),
+  		container =sketch,
+  		class = 'table-hover',
+  		options = list(
+  		  autoFill = list(horizontal=FALSE,vertical=TRUE,alwaysAsk=FALSE),
+    		autoWidth = TRUE,
+    		columnDefs = list(
+    		  list(width = '20px', targets = 1:ncol(dat)),
+    		  list(className = 'dt-center success', targets = 1:ncol(dat))
+    		  # list(className = 'success', targets = 1:4)
+    		  ),
+    		dom = 't',paging = FALSE, ordering = FALSE
+  		)
+	  )%>% formatStyle(5, 'border-right' = 'dashed')%>% formatStyle(7, 'border-right' = 'solid')
+	# ,c(6,8), 'border-left'=c('dashed','solid'))
 	})
 
 	#################################
@@ -241,28 +247,46 @@ guiplot_dt_Server <- function(input, output, session, data1 =NULL,colname=NULL) 
 		if(!is.null(info)){
 		  info <- unique(info)
 		  info$value[info$value==""] <- NA
-		  info<-as.data.frame(Binfo(Tautofill(dat,info,1)))
-		  dat <<- editData(dat, info, proxy = "dt")
+		  if (info[1,2]>7){
+		    dat <<- editData(dat, info, proxy = "dt")
+		  }else{
+		    info<-as.data.frame(Binfo(Tautofill(dat[,1:8],info,1)))
+		    dat <<- editData(dat, info, proxy = "dt")
+		  }
 		}
 		dat
 	})
 
 	Data_select <- reactive({
+	  # browser()
+	  a<-dat
 	  info <- input[["dt_cells_selected"]]
 	  # cat(info)
 	  if(is.null(info)||ncol(info)<2){
-	    return()
+	    # return()
 	  }else{
-	    inf<-cbind(info,dat[info[1],info[2]])
-	    info<-as.data.frame(inf,byrow = TRUE)
-	    colnames(info)<-c("row","col","value")
-	    val1<-info[1,3]
-	    if (val1==1){info[1,3]<-0}else{info[1,3]<-1}
-	    info <- unique(info)
-	    info$value[info$value==""] <- NA
-	    info<-as.data.frame(Binfo(Tautofill(dat,info,1)))
-	    dat <<- editData(dat, info, proxy = "dt")
+	    if (info[1,2]>7){
+	      inf<-cbind(info,dat[info[1],info[2]])
+	      info<-as.data.frame(inf,byrow = TRUE)
+	      colnames(info)<-c("row","col","value")
+	      val1<-info[1,3]
+	      if (val1==1){info[1,3]<-0}else{info[1,3]<-1}
+	      info <- unique(info)
+	      info$value[info$value==""] <- NA
+	      dat <<- editData(dat, info, proxy = "dt")
+	    }else{
+  	    inf<-cbind(info,dat[info[1],info[2]])
+  	    info<-as.data.frame(inf,byrow = TRUE)
+  	    colnames(info)<-c("row","col","value")
+  	    val1<-info[1,3]
+  	    if (val1==1){info[1,3]<-0}else{info[1,3]<-1}
+  	    info <- unique(info)
+  	    info$value[info$value==""] <- NA
+  	    info<-as.data.frame(Binfo(Tautofill(dat[,1:8],info,1)))
+  	    dat <<- editData(dat, info, proxy = "dt")
+	    }
 	  }
+	  a<-dat
 	  dat
 	})
 	return(list(mptable=reactive({
@@ -384,7 +408,7 @@ Tautofill<-function(data,infoo,dr){
   srend<-infoo[nrow(infoo),1]
 
   #ST information
-  ST<-as.matrix(Tselect(data,infoo), byrow = TRUE)
+    ST<-as.matrix(`Tselect`(data,infoo), byrow = TRUE)
   nr<-nrow(ST)
   nc<-ncol(ST)
   #browser()
