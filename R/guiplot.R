@@ -9,8 +9,9 @@
 #' @import shiny ggplot2 svglite
 #' @importFrom DT datatable DTOutput renderDT JS editData formatStyle
 #' @importFrom rlang parse_expr expr
-#'  stats na.omit
+#' @importFrom stats na.omit
 #' @importFrom magrittr %>%
+#' @importFrom htmltools withTags
 #' @examples
 #' \dontrun{
 #' guiplot(PK)

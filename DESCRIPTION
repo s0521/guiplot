@@ -1,14 +1,13 @@
 Package: guiplot
 Type: Package
-Title: User-friendly GUI ploting tools
+Title: User-Friendly GUI Plotting Tools
 Version: 0.1.0
-Author: Fu yongchao <3212418315@qq.com>
-Maintainer: Fu yongchao <3212418315@qq.com>
-Description: R is a very anti-human language. 
-    The package aims to improve this dilemma and create a user-friendly drawing GUI for R.
-    In addition, one purpose of creating the R package is to facilitate third-party software to call R for drawing, for example, "Phoenix WinNonlin" software calls R to draw the drug concentration versus time curve.
+Author: Fu Yongchao <3212418315@qq.com>
+Maintainer: Fu Yongchao <3212418315@qq.com>
+Description: The package create a user-friendly plotting GUI for R.
+    In addition, one purpose of creating the R package is to facilitate third-party software to call R for drawing, for example, 'Phoenix WinNonlin' software calls R to draw the drug concentration versus time curve.
 URL: https://s0521.github.io/guiplot/about/
-Imports: shiny(>= 1.0.0), ggplot2 (>= 3.0.0), svglite, DT, rlang (>= 0.3.1),stats
+Imports: shiny(>= 1.0.0), ggplot2 (>= 3.0.0), svglite, DT, rlang (>= 0.3.1),stats, magrittr,htmltools
 License: MIT + file LICENSE
 Depends: R (>= 3.6.0)
 Encoding: UTF-8
