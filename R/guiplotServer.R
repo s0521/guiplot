@@ -233,8 +233,12 @@ guiplot_dt_Server <- function(input, output, session, data1 =NULL,colname=NULL) 
 	#
 	dat<-Tint(mpm(data,colna),1)
 
+  #LinShiBianLiang
+	thead<-NULL
+	tr<-NULL
+	th<-NULL
 	#container
-	sketch <- htmltools::withTags(table(
+	sketch <- withTags(table(
 	  class = 'display',
 	  thead(
 	    tr(
