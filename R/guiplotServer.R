@@ -223,39 +223,27 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
 }
 
 
-guiplot_dt_Server <- function(input, output, session, data1 =NULL,colname=NULL) {
+guiplot_dt_Server <- function(input, output, session, data_and_name =NULL, field_groups=NULL) {
   #server = FALSE
 
   #################################
   #################################
   #panel的名字dataname
-  dataname<-c(data1[[2]])
+  dataname<-c(data_and_name[[2]])
   output$tab1 <-renderText(dataname)
 
   #################################
   #################################
   #################################
   #使用的外部数据集
-  data<-as.data.frame(data1[[1]])
-
-  field<-colname
-
-  c1name <- field
-  c2group <- c(rep("1",5),rep("3",2),rep("4",4))
-  c3display <-c(rep("Plot Data",5),rep("Lattice By",2),rep("Group By",4))
-
-  c_name <- matrix (nrow=3,ncol=length(c1name),byrow = T )
-  c_name[1,] <- c1name
-  c_name[2,] <- c2group
-  c_name[3,] <- c3display
-
-  r_name<-c(colnames(data))
+  # data<-as.data.frame(data1[[1]])
+  r_name<-c(colnames(data_and_name[[1]]))
 
   #################################
   #################################
   #################################
   #实例化一个Mapping_Table对象
-  obj_mptbl<-Mapping_Table$new(field_groups=c_name,variable=r_name,default_field=1)
+  obj_mptbl<-Mapping_Table$new(field_groups=field_groups,variable=r_name,default_field=1)
   obj_mptbl$create_mptbl()
 
   dat<-obj_mptbl$mapping_table

@@ -22,8 +22,15 @@
 guiplot <- function(...) {
   ########################################################
   #Obtaining and Specifying the Data and Parameters Needed
-  # colna<-c("none","x","y","group","ymin","ymax")
-  colna<-c("none","x","y","ymin","ymax","column","row","group","color","linetype","mark")
+  c1name <- c("none","x","y","ymin","ymax","column","row","group","color","linetype","mark")
+  c2group <- c(rep("1",5),rep("3",2),rep("4",4))
+  c3display <-c(rep("Plot Data",5),rep("Lattice By",2),rep("Group By",4))
+  c_name <- matrix (nrow=3,ncol=length(c1name),byrow = T )
+  c_name[1,] <- c1name
+  c_name[2,] <- c2group
+  c_name[3,] <- c3display
+
+  field_groups<-c_name
 
   get_data_arry<-function(...){
     # browser()
@@ -44,79 +51,80 @@ guiplot <- function(...) {
     j<-NULL
     return(arry_data)
   }
+
   res_data<-get_data_arry(...)
   # res_data <- get_data(data, name = deparse(substitute(data)))
   #Obtaining and Specifying the Data and Parameters Needed
   ########################################################
 
 
-guiplotServer = function(input, output, session) {
-  # Panl_Height<-reactive({input$Panle_Height})
-  # Panl_Width<-reactive({input$Panle_Width})
-  # browser()
-  callModule(
-    module = guiplot_tital_Server,
-    id = "guiplot"
-  )
-
-  callModule(
-    module = guiplot_result_Server,
-    id = "guiplot"
-  )
-
-  ##############################
-  #setup_tabPanel_panel
-  output$ui<-renderUI({
-    id = "guiplot"
-    ns <- NS(id)
-    eval(text_panels())
-  })
-
-  text_panels<-reactive({
+  guiplotServer = function(input, output, session) {
+    # Panl_Height<-reactive({input$Panle_Height})
+    # Panl_Width<-reactive({input$Panle_Width})
     # browser()
-    a<-NULL
-    b<-NULL
-    for (j in 1:nrow(res_data)){
-      Parname<-paste(sep="","data_panae_",j)
-      a[j]<-paste(sep="" ,"setup_tabPanel_panel(","'",Parname,"'",")")
-    }
-    a<-paste(a,collapse =",")
-    b<-paste(sep="" ,"navlistPanel(widths = c(3, 9),",a,")")
-    parse_expr(b)
-  })
+    callModule(
+      module = guiplot_tital_Server,
+      id = "guiplot"
+    )
 
-  mptable<-reactive({
-    mp_table<-list()
-    for (j in 1:nrow(res_data)){
-      Parname<-paste(sep="","data_panae_",j)
-      mp_item<-NULL
+    callModule(
+      module = guiplot_result_Server,
+      id = "guiplot"
+    )
 
-      mp_item<- callModule(
-        module = guiplot_dt_Server,
-        id = Parname,
-        data = res_data[j,],
-        colname=colna
-      )
-        mp_table[j]<-mp_item
-    }
-    mp_table
-  })
-  #
-  ##############################
+    ##############################
+    #setup_tabPanel_panel
+    output$ui<-renderUI({
+      id = "guiplot"
+      ns <- NS(id)
+      eval(text_panels())
+    })
 
-  callModule(
-    module = guiplot_plot_Server,
-    id = "guiplot",
-    data = mptable(),
-    dataname=res_data[,2]
-  )
+    text_panels<-reactive({
+      # browser()
+      a<-NULL
+      b<-NULL
+      for (j in 1:nrow(res_data)){
+        Parname<-paste(sep="","data_panae_",j)
+        a[j]<-paste(sep="" ,"setup_tabPanel_panel(","'",Parname,"'",")")
+      }
+      a<-paste(a,collapse =",")
+      b<-paste(sep="" ,"navlistPanel(widths = c(3, 9),",a,")")
+      parse_expr(b)
+    })
 
-  callModule(
-    module =   guiplot_layout_updata_server,
-    id = "guiplot"
-  )
+    mptable<-reactive({
+      mp_table<-list()
+      for (j in 1:nrow(res_data)){
+        Parname<-paste(sep="","data_panae_",j)
+        mp_item<-NULL
 
-}
+        mp_item<- callModule(
+          module = guiplot_dt_Server,
+          id = Parname,
+          data_and_name = res_data[j,],
+          field_groups = field_groups
+        )
+          mp_table[j]<-mp_item
+      }
+      mp_table
+    })
+    #
+    ##############################
+
+    callModule(
+      module = guiplot_plot_Server,
+      id = "guiplot",
+      data = mptable(),
+      dataname=res_data[,2]
+    )
+
+    callModule(
+      module = guiplot_layout_updata_server,
+      id = "guiplot"
+    )
+
+  }
 
   runGadget(
     #browser(),
