@@ -5,11 +5,12 @@ get_data <- function(data = NULL, name = NULL) {
     if (is.character(data)) {
       guiplot_data <- try({
         dat <- get(x = data, envir = globalenv())
-        if (inherits(dat, what = "sf")) {
-          dat
-        } else {
-          as.data.frame(dat)
-        }
+        dat
+        # if (inherits(dat, what = "sf")) {
+        #   dat
+        # } else {
+        #   as.data.frame(dat)
+        # }
       }, silent = TRUE)
       guiplot_data_name <- data
       if ("try-error" %in% class(guiplot_data)) {
@@ -19,11 +20,12 @@ get_data <- function(data = NULL, name = NULL) {
       }
     } else if (inherits(x = data, what = "data.frame")) {
       guiplot_data <- try({
-        if (inherits(data, what = "sf")) {
-          data
-        } else {
-          as.data.frame(data)
-        }
+        data
+        # if (inherits(data, what = "sf")) {
+        #   data
+        # } else {
+        #   as.data.frame(data)
+        # }
       }, silent = TRUE)
       if ("try-error" %in% class(guiplot_data)) {
         warning(paste0("'", data, "' not found"), call. = FALSE)

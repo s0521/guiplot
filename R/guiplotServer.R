@@ -8,7 +8,7 @@ guiplot_tital_Server<- function(input, output, session) {
     })
 }
 
-guiplot_result_Server <- function(input, output, session) {
+guiplot_result_Server <- function(input, output, session, out_dir =NULL) {
   # pixelratio<- reactive({session$clientData$pixelratio})
   # web_plot_width <- reactive({input$web_plot_width})
   # web_plot_height <- reactive({input$web_plot_height})
@@ -17,21 +17,25 @@ guiplot_result_Server <- function(input, output, session) {
   # output_plot_height <- reactive({input$output_plot_height})
   # output_plot_dpi <- reactive({input$output_plot_dpi})
   units <- reactive({"cm"})
+  # out_dir<-tempdir()
 
   observeEvent(input$ExecuteButton, {
     ggsave("ggplot.svg",
+           path=out_dir,
            width = input$output_plot_width,
            height =input$output_plot_height,
            units =units(),
            scale = input$web_plot_scale
     )
     ggsave("ggplot.pdf",
+           path=out_dir,
            width = input$output_plot_width,
            height =input$output_plot_height,
            units =units(),
            scale = input$web_plot_scale
            )
     ggsave("ggplot.png",
+           path=out_dir,
            dpi=input$output_plot_dpi,
            width = input$output_plot_width,
            height =input$output_plot_height,
@@ -207,14 +211,16 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
     # output_plot_dpi <- reactive({input$output_plot_dpi})
 
     eval(parse_expr(as.character(get_plot_codes())))
-    ggsave("ggplot.svg",
+    outfile <- tempfile(fileext='.png')
+    ggsave(outfile,#"ggplot.svg",
+           # path=out_dir<-tempdir(),
            width = input$output_plot_width,
            height =input$output_plot_height,
            units ="cm",
            scale = input$web_plot_scale
     )
    list(
-     src = "ggplot.svg",
+     src = outfile,#"ggplot.svg",
      width = input$web_plot_width*session$clientData$pixelratio,
      height =input$web_plot_height*session$clientData$pixelratio,
      alt = "This is preview plot"
@@ -246,7 +252,8 @@ guiplot_dt_Server <- function(input, output, session, data_and_name =NULL, field
   obj_mptbl<-Mapping_Table$new(field_groups=field_groups,variable=r_name,default_field=1)
   obj_mptbl$create_mptbl()
 
-  dat<-obj_mptbl$mapping_table
+  env_guiplot<- new.env(parent = emptyenv())
+  env_guiplot$dat<-obj_mptbl$mapping_table
   sketch <-obj_mptbl$DT_container
   field_right_bound<-obj_mptbl$field_right_bound
 
@@ -255,7 +262,7 @@ guiplot_dt_Server <- function(input, output, session, data_and_name =NULL, field
   #################################
   output$dt = renderDT({
     datatable(
-      dat,
+      env_guiplot$dat,
       rownames = TRUE,width=100 ,
       # editable = list(target = "cell"),
       selection = list(mode = 'single', target = 'cell'),
@@ -267,8 +274,8 @@ guiplot_dt_Server <- function(input, output, session, data_and_name =NULL, field
         autoFill = list(horizontal=FALSE,vertical=TRUE,alwaysAsk=FALSE),
         autoWidth = TRUE,
         columnDefs = list(
-          list(width = '20px', targets = 1:ncol(dat)),
-          list(className = 'dt-center success', targets = 1:ncol(dat))
+          list(width = '20px', targets = 1:ncol(env_guiplot$dat)),
+          list(className = 'dt-center success', targets = 1:ncol(env_guiplot$dat))
         ),
         dom = 't',paging = FALSE, ordering = FALSE
       )
@@ -291,24 +298,24 @@ guiplot_dt_Server <- function(input, output, session, data_and_name =NULL, field
       info$value[info$value==""] <- NA
 
       obj_mptbl$mptbl_event_fill(info)
-      dat <<- editData(dat, as.data.frame(obj_mptbl$inf_of_mptbl), proxy = "dt")
+      env_guiplot$dat <- editData(env_guiplot$dat, as.data.frame(obj_mptbl$inf_of_mptbl), proxy = "dt")
     }
-    dat
+    env_guiplot$dat
   })
 
   Data_select <- reactive({
     # browser()
-    a<-dat
+    a<-env_guiplot$dat
     info <- input[["dt_cells_selected"]]
     if(is.null(info)||ncol(info)<2){
       # return()
     }else{
-      info<-cbind(info,dat[info[1],info[2]])
+      info<-cbind(info,env_guiplot$dat[info[1],info[2]])
 
       obj_mptbl$mptbl_event_select(info)
-      dat <<- editData(dat, as.data.frame(obj_mptbl$inf_of_mptbl), proxy = "dt")
+      env_guiplot$dat <- editData(env_guiplot$dat, as.data.frame(obj_mptbl$inf_of_mptbl), proxy = "dt")
     }
-    dat
+    env_guiplot$dat
   })
 
   #################################
@@ -318,7 +325,7 @@ guiplot_dt_Server <- function(input, output, session, data_and_name =NULL, field
   return(list(mptable=reactive({
     Data_fill()
     Data_select()
-    a<-dat
+    a<-env_guiplot$dat
     return(a)
   })))
 

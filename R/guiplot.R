@@ -4,6 +4,7 @@
 #'
 #' @title guiplot
 #' @param ... Matrix or data frame
+#' @param out_dir The storage path of the output picture, recommend 'out_dir=getwb()'
 #' @export
 #' @return png and pdf of plot
 #' @import shiny ggplot2 svglite
@@ -12,16 +13,21 @@
 #' @importFrom stats na.omit
 #' @importFrom magrittr %>%
 #' @importFrom htmltools withTags
+#' @importFrom methods new
 #' @examples
-#' \dontrun{
-#' guiplot(PK)
-#' }
-#' \dontrun{
+#' \donttest{
 #' guiplot()
 #' }
-guiplot <- function(...) {
+#' \donttest{
+#' guiplot(PK)
+#' }
+#' \donttest{
+#' guiplot(PK,out_dir=getwb())
+#' }
+guiplot <- function(..., out_dir = NULL) {
   ########################################################
-  #Obtaining and Specifying the Data and Parameters Needed
+  #Static data
+
   c1name <- c("none","x","y","ymin","ymax","column","row","group","color","linetype","mark")
   c2group <- c(rep("1",5),rep("3",2),rep("4",4))
   c3display <-c(rep("Plot Data",5),rep("Lattice By",2),rep("Group By",4))
@@ -32,6 +38,8 @@ guiplot <- function(...) {
 
   field_groups<-c_name
 
+  #########################################################
+  #Obtaining the Data and Parameters
   get_data_arry<-function(...){
     # browser()
     if(...length()<1){
@@ -40,19 +48,20 @@ guiplot <- function(...) {
       lsname<-as.character(eval(substitute(alist(...))))
     }
 
-    j=1
     arry_data<-NULL
+    browser()
     for (i in 1:length(lsname)){
       ind_data <- get_data(lsname[i], name = lsname[i])
       if(is.matrix(ind_data$guiplot_data)||is.data.frame(ind_data$guiplot_data)){
         arry_data<-rbind(arry_data,ind_data)
       }
     }
-    j<-NULL
     return(arry_data)
   }
 
   res_data<-get_data_arry(...)
+
+  if(is.null(out_dir)) out_dir<-tempdir()
   # res_data <- get_data(data, name = deparse(substitute(data)))
   #Obtaining and Specifying the Data and Parameters Needed
   ########################################################
@@ -69,7 +78,8 @@ guiplot <- function(...) {
 
     callModule(
       module = guiplot_result_Server,
-      id = "guiplot"
+      id = "guiplot",
+      out_dir=out_dir
     )
 
     ##############################

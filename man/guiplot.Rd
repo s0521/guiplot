@@ -4,10 +4,12 @@
 \alias{guiplot}
 \title{guiplot}
 \usage{
-guiplot(...)
+guiplot(..., out_dir = NULL)
 }
 \arguments{
 \item{...}{Matrix or data frame}
+
+\item{out_dir}{The storage path of the output picture, recommend 'out_dir=getwb()'}
 }
 \value{
 png and pdf of plot
@@ -16,10 +18,13 @@ png and pdf of plot
 guiplot
 }
 \examples{
-\dontrun{
+\donttest{
+guiplot()
+}
+\donttest{
 guiplot(PK)
 }
-\dontrun{
-guiplot()
+\donttest{
+guiplot(PK,out_dir=getwb())
 }
 }
