@@ -16,8 +16,13 @@ geomCode<-function(type,data,x,y,ymin=NULL,ymax=NULL,group=NULL,color=NULL,linet
 	color<-GetGroupText(color)
 	linetype<-GetGroupText(linetype)
 	shape<-GetGroupText(shape)
-	geomCode<-SetEveryY(type,data,x,y,ymin,ymax,group,color,linetype,shape)
-
+	if(is.null(x)&&is.null(y)&&(is.null(ymin)&&is.null(ymax))){return()}else{
+  	if(!is.null(y)&&!(is.null(ymin)&&is.null(ymax))){
+  	  geomCode<-SetEveryY(type,data,x,y,ymin,ymax,group,color,linetype,shape)
+  	}else{
+  	  geomCode<-GetGeomCode(type,data,x,y,ymin,ymax,group,color,linetype,shape)
+  	}
+	}
 	return(geomCode)
 
 }

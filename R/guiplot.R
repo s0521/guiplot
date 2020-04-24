@@ -49,7 +49,7 @@ guiplot <- function(..., out_dir = NULL) {
     }
 
     arry_data<-NULL
-    browser()
+    # browser()
     for (i in 1:length(lsname)){
       ind_data <- get_data(lsname[i], name = lsname[i])
       if(is.matrix(ind_data$guiplot_data)||is.data.frame(ind_data$guiplot_data)){

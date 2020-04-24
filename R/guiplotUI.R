@@ -82,7 +82,7 @@ geom_type_ui<-function(id="guiplot"){
                                   "area",
                                   "density",
                                   "dotplot",
-                                  "freqploly",
+                                  "freqpoly",
                                   "histogram",
                                   "bar",
                                   "col"
