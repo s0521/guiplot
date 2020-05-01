@@ -1,4 +1,11 @@
 #单选类
+#' A Reference Class to handle single-choice events
+#'
+#' @field field A length-one numeric vector.
+#' @field variable A character vector.
+#' @field default_field A length-one numeric vector.
+#' @field preselection_field A matrix.
+#' @field mapping_table A matrix.
 Single_Mptbl<-setRefClass("Single_Mptbl",
   #contains=父类,
   fields=list(
@@ -14,6 +21,7 @@ Single_Mptbl<-setRefClass("Single_Mptbl",
   methods=list(
     #生成映射列表
     create_mptbl= function() {
+      "create a mapping_table"
       nr<-length(variable)
       nc<-length(field)
 
@@ -26,6 +34,7 @@ Single_Mptbl<-setRefClass("Single_Mptbl",
 
     #选中默认选项
     mptbl_select_default_field= function(default_field) {
+      "mapping_table select default field"
       #待编写错误捕获
       local_mptbl<-mapping_table
       nr<-nrow(local_mptbl)
@@ -42,10 +51,13 @@ Single_Mptbl<-setRefClass("Single_Mptbl",
     },
 
     #选择预选选项
-    mptbl_select_preselection_field= function() { },
+    mptbl_select_preselection_field= function() {
+      "mapping_table select preselection field"
+      },
 
     #选中事件
     mptbl_event_select= function(selection_inf) {
+      "Handle single-choice selection events"
       # browser()
       aaa<-selection_inf
       local_mptbl<-mapping_table
@@ -70,6 +82,7 @@ Single_Mptbl<-setRefClass("Single_Mptbl",
 
     #填充事件
     mptbl_event_fill= function(fill_inf) {
+      "Handle fill selection events"
       # browser()
       local_mptbl<-mapping_table
       select_row_fist<-fill_inf[1,1]
@@ -98,11 +111,19 @@ Single_Mptbl<-setRefClass("Single_Mptbl",
 )
 
 #多选类
+#' A Reference Class to handle multiple-choice events
+#'
+#' @field field A length-one numeric vector.
+#' @field variable A character vector.
+#' @field default_field A length-one numeric vector.
+#' @field preselection_field A matrix.
+#' @field mapping_table A matrix.
 Multiple_Mptbl<-setRefClass("Multiple_Mptbl",
                              contains="Single_Mptbl",
                              methods=list(
                                #选中事件
                                mptbl_event_select= function(selection_inf) {
+                                 "Handle multiple-choice selection events"
                                  # browser()
                                  aaa<-selection_inf
                                  local_mptbl<-mapping_table
@@ -127,6 +148,7 @@ Multiple_Mptbl<-setRefClass("Multiple_Mptbl",
 
                                #填充事件
                                mptbl_event_fill= function(fill_inf) {
+                                 "Handle fill selection events"
                                  # browser()
                                  local_mptbl<-mapping_table
                                  select_row_fist<-fill_inf[1,1]
@@ -154,6 +176,18 @@ Multiple_Mptbl<-setRefClass("Multiple_Mptbl",
                              )
 
 #调度类，用于接收数据，并调用多选类和单选类处理数据
+#' A Reference Class to handle mapping_table events
+#'
+#' @field field_groups matrix.
+#' @field variable A character vector.
+#' @field default_field A length-one numeric vector.
+#' @field preselection_field A matrix.
+#' @field mapping_table A matrix.
+#' @field field_index_transform A matrix.
+#' @field mapping_table A matrix.
+#' @field inf_of_mptbl A matrix.
+#' @field field_right_bound A vector
+#' @field DT_container A character
 Mapping_Table<-setRefClass("Mapping_Table",
                            #contains=父类,
                            fields=list(
@@ -173,6 +207,7 @@ Mapping_Table<-setRefClass("Mapping_Table",
                            methods=list(
                              #生成映射列表
                              create_mptbl= function() {
+                               "create a mapping_table, and select default field,and set field_right bound, set DT container"
                                nr<-length(variable)
                                nc<-length(field_groups[1,])
 
@@ -195,6 +230,7 @@ Mapping_Table<-setRefClass("Mapping_Table",
 
                              #分别配字段通过字段组#该方法暂时没有用
                              assign_field_by_field_group=function() {
+                               "assign field by field_group"
                                field_value<-field_groups[1,]
                                field_group<-as.integer(c(field_groups[2,]))
                                field_display_group<-field_groups[3,]
@@ -215,17 +251,20 @@ Mapping_Table<-setRefClass("Mapping_Table",
 
                              #选中默认选项
                              mptbl_select_default_field = function(default_field) {
+                               "mapping_table select default field"
                                mapping_table[,default_field]<<-1L
                              },
 
                              #预选事件
                              mptbl_select_preselection_field = function(preselection_field) {
+                               "mapping_table select preselection field"
                                mptbl_event_select(preselection_field)
                              },
 
 
                              #选中事件
                              mptbl_event_select= function(selection_inf) {
+                               "mapping_table select event assign"
                                # browser()
                                for (j in 1:nrow(selection_inf)){
                                  i_num<-selection_inf[j,2]
@@ -258,6 +297,7 @@ Mapping_Table<-setRefClass("Mapping_Table",
 
                              #填充事件
                              mptbl_event_fill= function(fill_inf) {
+                               "mapping_table fill event assign"
                                # browser()
                                  fill_inf<-as.matrix(fill_inf,ncol=3)
                                  i_num<-fill_inf[1,2]
@@ -288,6 +328,7 @@ Mapping_Table<-setRefClass("Mapping_Table",
 
                              #内部方法——从mapping_table获取子表格
                              get_sub_group=function(group_name) {
+                               "Internal method: get sub_group from mapping_table"
                                # field_value<-field_groups[1,]
                                field_group<-as.integer(c(field_groups[2,]))
                                # field_display_group<-field_groups[3,]
@@ -320,6 +361,7 @@ Mapping_Table<-setRefClass("Mapping_Table",
 
                              #内部方法——将子表格的内容赋值给mapping_table
                              set_mptabl = function(group_name,mptbl) {
+                               "Internal method: Use the value of the subtable to set the value of the"
                                # field_value<-field_groups[1,]
                                field_group<-as.integer(c(field_groups[2,]))
                                # field_display_group<-field_groups[3,]
@@ -339,6 +381,7 @@ Mapping_Table<-setRefClass("Mapping_Table",
 
                              #内部方法——将mapping_table转换为inf格式
                              mptbl_to_inf= function(mapping_table) {
+                               "Internal method: Convert mapping_table to inf_of_mptbl"
                                # browser()
                                nr<-nrow(mapping_table)
                                nc<-ncol(mapping_table)
@@ -360,6 +403,7 @@ Mapping_Table<-setRefClass("Mapping_Table",
 
                              #内部方法——将field_groups转换为field_right_bound
                              set_field_right_bound = function(field_groups) {
+                               "Internal method: set field right bound"
                                # field_value<-field_groups[1,]
                                # field_group<-as.integer(c(field_groups[2,]))
                                field_display_group<-field_groups[3,]
@@ -374,6 +418,7 @@ Mapping_Table<-setRefClass("Mapping_Table",
 
                              #内部方法——将field_groups转换为DT_container
                              set_DT_container = function(field_groups) {
+                               "Internal method: set DT container"
                                field_value<-field_groups[1,]
                                # field_group<-as.integer(c(field_groups[2,]))
                                field_display_group<-field_groups[3,]
