@@ -1,6 +1,5 @@
-#R is a very anti-human language. The package aims to improve this dilemma and create a user-friendly drawing GUI for R.
-#plot engine ggplot2
-#shiny runGadget callModule browserViewer plotOutput textOutput actionButton NS fluidPage navlistPanel tabPanel tagList fluidRow column
+#Create a user-friendly plotting GUI for R.
+#plot engine is ggplot2
 #'
 #' @title guiplot
 #' @param ... Matrix or data frame
