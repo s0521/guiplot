@@ -249,7 +249,8 @@ guiplot_dt_Server <- function(input, output, session, data_and_name =NULL, field
   #################################
   #################################
   #实例化一个Mapping_Table对象
-  obj_mptbl<-Mapping_Table$new(field_groups=field_groups,variable=r_name,default_field=1)
+  obj_mptbl<-Mapping_Table_class$new(field_groups=field_groups,variable=r_name,default_field=1)
+  # browser()
   obj_mptbl$create_mptbl()
 
   env_guiplot<- new.env(parent = emptyenv())

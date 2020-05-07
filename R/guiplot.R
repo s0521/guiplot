@@ -5,24 +5,27 @@
 #' @param ... Matrix or data frame
 #' @param out_dir The storage path of the output picture, recommend 'out_dir=getwb()'
 #' @export
-#' @return png and pdf of plot
-#' @import shiny ggplot2 svglite
+#' @return Export files(png and pdf of plot) to a temporary directory, or user-defined folders.
+#' @import shiny ggplot2 svglite R6
 #' @importFrom DT datatable DTOutput renderDT JS editData formatStyle
 #' @importFrom rlang parse_expr expr
 #' @importFrom stats na.omit
 #' @importFrom magrittr %>%
-#' @importFrom htmltools withTags
-#' @importFrom methods new
 #' @examples
-#' \donttest{
-#' guiplot()
-#' }
-#' \donttest{
+#' if (interactive()) {
+#' # Launch with built-in PK data set:
 #' guiplot(PK)
 #' }
-#' \donttest{
-#' guiplot(PK,out_dir=getwb())
+#'
+#' \dontrun{
+#' # Launch with memory-in data set:
+#' guiplot()
+#'
+#' # Launch with memory-in data set, and output plot to user-defined folders:
+#' guiplot(PK,out_dir= Any_directory_you_want_to_export)
+#'
 #' }
+#'
 guiplot <- function(..., out_dir = NULL) {
   ########################################################
   #Static data
