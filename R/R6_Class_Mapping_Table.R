@@ -1,5 +1,6 @@
 #单选类
 #A R6 Class to handle Single-choice events
+#用于处理字段类型为单选型(该映射列表中的字段仅被允许映射一个变量)的一个R6类
 Single_Mptbl<-R6Class("Single_Mptbl",
   #inherit=父类,
   public =list(
@@ -121,6 +122,7 @@ Single_Mptbl<-R6Class("Single_Mptbl",
 
 #多选类
 #A R6 Class to handle multiple-choice events
+#用于处理字段类型为多选型(该映射列表中的字段可同时映射多个变量)的一个R6类
 Multiple_Mptbl<-R6Class("Multiple_Mptbl",
                         inherit =Single_Mptbl,
                         public  =list(
@@ -322,8 +324,8 @@ Mapping_Table_class<-R6Class("Mapping_Table",
                                  if (i%%2 ==0){
                                    group_name<-paste("multiple",i,sep ="")
                                    assign(group_name,self$get_sub_group(group_name))
-                                   fill_inf[,2]<-field_index_transform[4,i_num]
-                                   local_default_field<-as.integer(field_index_transform[4,self$default_field])
+                                   fill_inf[,2]<-self$field_index_transform[4,i_num]
+                                   local_default_field<-as.integer(self$field_index_transform[4,self$default_field])
                                    local_obj<-get(group_name)
                                    local_obj$default_field<-local_default_field
 
@@ -333,8 +335,8 @@ Mapping_Table_class<-R6Class("Mapping_Table",
                                  }else{
                                    group_name<-paste("single",i,sep ="")
                                    assign(group_name,self$get_sub_group(group_name))
-                                   fill_inf[,2]<-as.integer(field_index_transform[4,i_num])
-                                   local_default_field<-as.integer(field_index_transform[4,self$default_field])
+                                   fill_inf[,2]<-as.integer(self$field_index_transform[4,i_num])
+                                   local_default_field<-as.integer(self$field_index_transform[4,self$default_field])
                                    local_obj<-get(group_name)
                                    local_obj$default_field<-local_default_field
 

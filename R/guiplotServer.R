@@ -294,6 +294,7 @@ guiplot_dt_Server <- function(input, output, session, data_and_name =NULL, field
   Data_fill <- reactive({
     # browser()
     info <- input[["dt_cells_filled"]]
+	#print(c("\n info is ",info))
     if(!is.null(info)){
       info <- unique(info)
       info$value[info$value==""] <- NA
@@ -428,5 +429,6 @@ callback <- c(
   "  }",
   "  Shiny.setInputValue(id + '_cells_filled:DT.cellInfo', out);",
   "  table.rows().invalidate();", # this updates the column type
-  "});"
+  "});",
+  "delete $.fn.dataTable.AutoFill.actions.increment;"
 )
