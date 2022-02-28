@@ -349,7 +349,7 @@ object_options_ui<-function(id="guiplot") {
 			),
 		  tabPanel("Y(hline)"),
 		  tabPanel("Y2()"),
-		  tabPanel("unity(abline)")	  
+		  tabPanel("unity(abline)")
 	  )
     )
   )

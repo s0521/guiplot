@@ -272,11 +272,12 @@ guiplot_dt_Server <- function(input, output, session, data_and_name =NULL, field
       container =sketch,
       class = 'table-hover',
       options = list(
-        autoFill = list(horizontal=FALSE,vertical=TRUE,alwaysAsk=FALSE),
+        autoFill = list(alwaysAsk=FALSE),
         autoWidth = TRUE,
         columnDefs = list(
           list(width = '20px', targets = 1:ncol(env_guiplot$dat)),
-          list(className = 'dt-center success', targets = 1:ncol(env_guiplot$dat))
+          list(className = 'dt-center success', targets = 1:ncol(env_guiplot$dat)),
+          list(render=JS(Colum_render_js),targets = 1:ncol(env_guiplot$dat))
         ),
         dom = 't',paging = FALSE, ordering = FALSE
       )
@@ -393,9 +394,9 @@ guiplot_layout_updata_server<-function(input, output, session){
   output$vline = renderDT({
 		linshi_vline_dt_table
   })
-  
-  
-  
+
+
+
 }
 
 #################################
@@ -416,10 +417,11 @@ GetMappingValue<-function(data,column){
   var1
 }
 
-#################################
-#################################
-#################################
-#callback for guiplot_dt_Server
+####################################
+####################################
+####################################
+####callback for guiplot_dt_Server
+####获取Autofill的填充相关的事件，并包装为一个输入项_cells_filled返还给shiny
 callback <- c(
   "var tbl = $(table.table().node());",
   "var id = tbl.closest('.datatables').attr('id');",
@@ -440,5 +442,29 @@ callback <- c(
   "  Shiny.setInputValue(id + '_cells_filled:DT.cellInfo', out);",
   "  table.rows().invalidate();", # this updates the column type
   "});",
-  "delete $.fn.dataTable.AutoFill.actions.increment;"
+  #########################################################################
+  ####将“AutoFill”的填充提示选项中的不需要的部分移除，以使不弹出提示#######
+  "delete $.fn.dataTable.AutoFill.actions.increment;",
+  "delete $.fn.dataTable.AutoFill.actions.fillHorizontal;",
+  "delete $.fn.dataTable.AutoFill.actions.fillVertical;",
+  ##########################################################################
+  ####为tbody添加鼠标悬浮事件捕获，以设置dt-autofill-handle的附加类#########
+  ####通过附加类为dt-autofill-handle添加其他固定的样式
+  ####以使dt-autofill-handle不在消失
+  "$('tbody').on('mouseover', function() {$('.dt-autofill-handle').addClass('hdAa')});",
+  "	var style = document.createElement('style');",
+  "	style.innerHTML = '.hdAa {background: green !important;display: block!important}';",
+  "	document.head.appendChild(style);",
+  ##########################################################################
+  " console.log($(table.table().node()).offsetParent().valueOf());",
+  "$('td').on('mouseout', function(e) {var that = this ; console.log(that) ; that.aaet = e.target ; that.aaert = relatedTarget ; });"
+)
+
+
+Colum_render_js <- c(
+  ##########################################
+  ####列的反应式渲染，已将0、1变为复选框####
+  " function(data, type, row, meta) {",
+  " if(data == 0){return '<input type=\"checkbox\" >'}",
+  " if(data == 1){return '<input type=\"checkbox\"  checked>'}}"
 )
