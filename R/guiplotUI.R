@@ -336,7 +336,21 @@ object_options_ui<-function(id="guiplot") {
         "Y2"
       ),
     tabPanel(
-      "Reference Lines "
+      "Reference Lines ",
+	  tabsetPanel(
+		  tabPanel(
+				"X(vline)",
+				#DTOutput(ns('vline'))
+				fluidPage(
+				 "Preview Plot Set(pixels)",
+					style='float:left',
+					DTOutput(ns('vline'), width = "100%", height = "auto")
+				)
+			),
+		  tabPanel("Y(hline)"),
+		  tabPanel("Y2()"),
+		  tabPanel("unity(abline)")	  
+	  )
     )
   )
 }

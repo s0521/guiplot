@@ -386,6 +386,16 @@ guiplot_layout_updata_server<-function(input, output, session){
                                     min<- value
                  )
                })
+	#################################
+  #################vline#######
+  #################################
+	linshi_vline_dt_table<-data.frame(Axis=c("X"),Value=c(1),Line_Weight=c(1),Title=c(1))
+  output$vline = renderDT({
+		linshi_vline_dt_table
+  })
+  
+  
+  
 }
 
 #################################
