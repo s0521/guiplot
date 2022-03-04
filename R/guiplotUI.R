@@ -191,7 +191,8 @@ setup_tabPanel_panel<-function(id="guiplot") {
 # }
 
 results_ui<-function(id="guiplot") {
-  tabPanel("Results Panel",
+  ns <- NS(id)
+
     navlistPanel(
       well = TRUE,
       fluid = TRUE,
@@ -202,18 +203,20 @@ results_ui<-function(id="guiplot") {
       ),
       "plot",
       tabPanel(
-        "plot"
+        "plot",
+        plotOutput(ns('Results_Plot1'),width = "auto", height = "auto")
       ),
       "text",
       tabPanel(
-        "text"
+        "text",
+        verbatimTextOutput(ns('Results_Text1'))
       ),
       "other",
       tabPanel(
         "other"
       )
     )
-  )
+  
 }
 
 plot_ui<-function(id="guiplot"){
@@ -375,24 +378,24 @@ guiplotUI <- fluidPage(
 
   ####################################
   #Data and Plot
-  tabsetPanel(
-      tabPanel("Setup Panel",
+  tabsetPanel( id="ChildTabset",
+      ##Setup Panel UI
+      tabPanel(title = "Setup Panel",
                uiOutput("ui"),
                plot_ui("guiplot")
       ),
-
-
-	  # setup_ui("guiplot"),
-	  results_ui("guiplot")
+	    ##Results Panel UI
+      tabPanel(title = "Results Panel",
+	      results_ui("guiplot")
+      )
   ),
   # plot_ui("guiplot"),
   ####################################
 
-
   #Object Options
   object_options_ui("guiplot"),
 
-  #JS customer
+  # JS customer
   tags$script(HTML(
     '
     $("ul:gt(1) a").css("padding","1px");

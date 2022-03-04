@@ -27,8 +27,7 @@
 #' }
 #'
 guiplot <- function(..., out_dir = NULL) {
-  ########################################################
-  #Static data
+  #Static data########################################################
 
   c1name <- c("none","x","y","ymin","ymax","column","row","group","color","linetype","mark")
   c2group <- c(rep("1",5),rep("3",2),rep("4",4))
@@ -75,13 +74,16 @@ guiplot <- function(..., out_dir = NULL) {
     # browser()
     callModule(
       module = guiplot_tital_Server,
-      id = "guiplot"
+      id = "guiplot",
+      Moudel_plot_codes = Moudel_plot_codes
     )
 
     callModule(
       module = guiplot_result_Server,
       id = "guiplot",
-      out_dir=out_dir
+      out_dir=out_dir,
+      Moudel_plot_codes = Moudel_plot_codes,
+      parentSession=session
     )
 
     ##############################
@@ -124,7 +126,7 @@ guiplot <- function(..., out_dir = NULL) {
     #
     ##############################
 
-    callModule(
+    Moudel_plot_codes <- callModule(
       module = guiplot_plot_Server,
       id = "guiplot",
       data = mptable(),

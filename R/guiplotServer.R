@@ -1,14 +1,16 @@
-guiplot_tital_Server<- function(input, output, session) {
+guiplot_tital_Server<- function(input, output, session, Moudel_plot_codes) {
   observeEvent(input$ColseButton, {
-    stopApp()
+    a<-parse_expr(Moudel_plot_codes$plot_code_expr())
+    a<-gsub("\\+","\n\\+", a)
+    stopApp(a)
+    cat("Session stopped ,Because observeEvent \n")
   })
   onStop(function() {
-    stopApp()
-    cat("Session stopped\n")
+    cat("Session stopped, Because onStop \n")
     })
 }
 
-guiplot_result_Server <- function(input, output, session, out_dir =NULL) {
+guiplot_result_Server <- function(input, output, session, out_dir =NULL, Moudel_plot_codes,parentSession) {
   # pixelratio<- reactive({session$clientData$pixelratio})
   # web_plot_width <- reactive({input$web_plot_width})
   # web_plot_height <- reactive({input$web_plot_height})
@@ -18,8 +20,12 @@ guiplot_result_Server <- function(input, output, session, out_dir =NULL) {
   # output_plot_dpi <- reactive({input$output_plot_dpi})
   units <- reactive({"cm"})
   # out_dir<-tempdir()
+  out_dir<-getwd()
 
   observeEvent(input$ExecuteButton, {
+    updateTabsetPanel(session = parentSession, inputId="ChildTabset",
+      selected = "Results Panel"
+    )
     ggsave("ggplot.svg",
            path=out_dir,
            width = input$output_plot_width,
@@ -43,6 +49,18 @@ guiplot_result_Server <- function(input, output, session, out_dir =NULL) {
            scale = input$web_plot_scale
            )
   })
+
+  output$Results_Plot1 <- renderImage({
+    list(
+      src = paste(out_dir,"/ggplot.png",sep=""),
+      width = input$web_plot_width*session$clientData$pixelratio,
+      height =input$web_plot_height*session$clientData$pixelratio,
+      alt = "This is preview plot"
+    )
+  })
+
+  # output$Results_Text1 <- renderText({Moudel_plot_codes$plot_code_expr()})
+  output$Results_Text1 <- renderText({gsub("\\+","\n\\+", Moudel_plot_codes$plot_code_expr())})
 }
 
 guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NULL) {
@@ -226,15 +244,24 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
      alt = "This is preview plot"
    )
   })
+
+  return(
+    list(
+      plot_code_expr=reactive({as.character(get_plot_codes())})
+      # width=reactive({input$output_plot_width}),
+      # height=reactive({input$output_plot_height}),
+      # scale=reactive({input$web_plot_scale}),
+      # units="cm"
+      )
+    )
+  # return(list(get_plot_codes()))
 }
 
 
-guiplot_dt_Server <- function(input, output, session, data_and_name =NULL, field_groups=NULL) {
+guiplot_dt_Server <- function(input, output, sesson, data_and_name =NULL, field_groups=NULL) {
   #server = FALSE
 
-  #################################
-  #################################
-  #panel的名字dataname
+  #panel的名字dataname#################################
   dataname<-c(data_and_name[[2]])
   output$tab1 <-renderText(dataname)
 
@@ -273,9 +300,9 @@ guiplot_dt_Server <- function(input, output, session, data_and_name =NULL, field
       class = 'table-hover',
       options = list(
         autoFill = list(alwaysAsk=FALSE),
-        autoWidth = TRUE,
+        # autoWidth = TRUE,
         columnDefs = list(
-          list(width = '20px', targets = 1:ncol(env_guiplot$dat)),
+          # list(width = '20px', targets = 1:ncol(env_guiplot$dat)),
           list(className = 'dt-center success', targets = 1:ncol(env_guiplot$dat)),
           list(render=JS(Colum_render_js),targets = 1:ncol(env_guiplot$dat))
         ),
@@ -417,10 +444,8 @@ GetMappingValue<-function(data,column){
   var1
 }
 
-####################################
-####################################
-####################################
-####callback for guiplot_dt_Server
+####~~ JS回调代码-----
+####~~~ callback for guiplot_dt_Server------
 ####获取Autofill的填充相关的事件，并包装为一个输入项_cells_filled返还给shiny
 callback <- c(
   "var tbl = $(table.table().node());",
@@ -443,7 +468,7 @@ callback <- c(
   "  table.rows().invalidate();", # this updates the column type
   "});",
   #########################################################################
-  ####将“AutoFill”的填充提示选项中的不需要的部分移除，以使不弹出提示#######
+  ####~~ 将“AutoFill”的填充提示选项中的不需要的部分移除，以使不弹出提示#######
   "delete $.fn.dataTable.AutoFill.actions.increment;",
   "delete $.fn.dataTable.AutoFill.actions.fillHorizontal;",
   "delete $.fn.dataTable.AutoFill.actions.fillVertical;",
@@ -454,10 +479,8 @@ callback <- c(
   "$('tbody').on('mouseover', function() {$('.dt-autofill-handle').addClass('hdAa')});",
   "	var style = document.createElement('style');",
   "	style.innerHTML = '.hdAa {background: green !important;display: block!important}';",
-  "	document.head.appendChild(style);",
+  "	document.head.appendChild(style);"
   ##########################################################################
-  " console.log($(table.table().node()).offsetParent().valueOf());",
-  "$('td').on('mouseout', function(e) {var that = this ; console.log(that) ; that.aaet = e.target ; that.aaert = relatedTarget ; });"
 )
 
 
