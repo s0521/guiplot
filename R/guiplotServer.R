@@ -1,7 +1,6 @@
 guiplot_tital_Server<- function(input, output, session, Moudel_plot_codes) {
   observeEvent(input$ColseButton, {
     a<-parse_expr(Moudel_plot_codes$plot_code_expr())
-    a<-gsub("\\+","\n\\+", a)
     stopApp(a)
     cat("Session stopped ,Because observeEvent \n")
   })
@@ -48,11 +47,19 @@ guiplot_result_Server <- function(input, output, session, out_dir =NULL, Moudel_
            units =units(),
            scale = input$web_plot_scale
            )
+    ggsave("ggplot2.png",
+           path=out_dir,
+           dpi=input$output_plot_dpi,
+           width = input$output_plot_width,
+           height =input$output_plot_height,
+           units =units(),
+           scale = input$web_plot_scale
+    )
   })
 
   output$Results_Plot1 <- renderImage({
     list(
-      src = paste(out_dir,"/ggplot.png",sep=""),
+      src = paste(out_dir,"/ggplot2.png",sep=""),
       width = input$web_plot_width*session$clientData$pixelratio,
       height =input$web_plot_height*session$clientData$pixelratio,
       alt = "This is preview plot"
