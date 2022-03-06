@@ -3,7 +3,7 @@
 #'
 #' @title guiplot
 #' @param ... Matrix or data frame
-#' @param out_dir The storage path of the output picture, recommend 'out_dir=getwb()'
+#' @param out_dir The storage path of the output picture, recommend 'out_dir=getwd()'
 #' @export
 #' @return Export files(png and pdf of plot) to a temporary directory, or user-defined folders.
 #' @import shiny ggplot2 svglite R6
@@ -26,7 +26,7 @@
 #'
 #' }
 #'
-guiplot <- function(..., out_dir = NULL) {
+guiplot <- function(..., out_dir = getwd()) {
   #Static data########################################################
 
   c1name <- c("none","x","y","ymin","ymax","column","row","group","color","linetype","mark")
