@@ -47,14 +47,6 @@ guiplot_result_Server <- function(input, output, session, out_dir =NULL, Moudel_
 
   output$Results_Plot1 <- renderImage({
     doSavePlot()
-    # ggsave("guiplot2.png",
-    #        path=out_dir,
-    #        # path=out_dir<-tempdir(),
-    #        width = input$output_plot_width,
-    #        height =input$output_plot_height,
-    #        units ="cm",
-    #        scale = input$web_plot_scale
-    # )
     list(
       src = paste(out_dir,"/guiplot2.png",sep=""),
       width = input$web_plot_width*session$clientData$pixelratio,
@@ -63,7 +55,6 @@ guiplot_result_Server <- function(input, output, session, out_dir =NULL, Moudel_
     )
   })
 
-  # output$Results_Text1 <- renderText({Moudel_plot_codes$plot_code_expr()})
   output$Results_Text1 <- renderText({
     textOfCode()
   })
