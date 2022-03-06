@@ -197,10 +197,10 @@ results_ui<-function(id="guiplot") {
       well = TRUE,
       fluid = TRUE,
       widths = c(3, 9),
-      "data",
-      tabPanel(
-        "data"
-      ),
+      # "data",
+      # tabPanel(
+      #   "data"
+      # ),
       "plot",
       tabPanel(
         "plot",
@@ -216,7 +216,7 @@ results_ui<-function(id="guiplot") {
         "other"
       )
     )
-  
+
 }
 
 plot_ui<-function(id="guiplot"){
