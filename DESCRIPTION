@@ -9,7 +9,7 @@ Description: Create a user-friendly plotting GUI for R.
 URL: https://s0521.github.io/guiplot/about/
 Imports: shiny(>= 1.0.0), ggplot2 (>= 3.0.0), svglite, DT, rlang (>= 0.3.1),stats, magrittr,R6
 License: MIT + file LICENSE
-Depends: R (>= 3.6.0)
+Depends: R (>= 4.1.0)
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.1

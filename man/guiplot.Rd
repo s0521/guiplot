@@ -4,12 +4,12 @@
 \alias{guiplot}
 \title{guiplot}
 \usage{
-guiplot(..., out_dir = NULL)
+guiplot(..., out_dir = getwd())
 }
 \arguments{
 \item{...}{Matrix or data frame}
 
-\item{out_dir}{The storage path of the output picture, recommend 'out_dir=getwb()'}
+\item{out_dir}{The storage path of the output picture, recommend 'out_dir=getwd()'}
 }
 \value{
 Export files(png and pdf of plot) to a temporary directory, or user-defined folders.
