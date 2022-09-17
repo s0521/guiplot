@@ -1,6 +1,6 @@
 guiplot_tital_Server<- function(input, output, session, Moudel_plot_codes) {
   observeEvent(input$ColseButton, {
-    a<-parse_expr(Moudel_plot_codes$plot_code_expr())
+    a<-parse_exprs(Moudel_plot_codes$plot_code_expr())
     stopApp(a)
     cat("Session stopped ,Because observeEvent \n")
   })
@@ -53,15 +53,42 @@ guiplot_result_Server <- function(input, output, session, out_dir =NULL, Moudel_
       height =input$web_plot_height*session$clientData$pixelratio,
       alt = "This is preview plot"
     )
-  })
+  },deleteFile=TRUE)
 
   output$Results_Text1 <- renderText({
     textOfCode()
   })
 }
 
-guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NULL) {
+guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NULL,data_col_Class_as=NULL) {
+  #browser()
   # browser()
+  #get data_col_Class_as TextCode获取数据列类型转换的代码文本
+  get_data_col_Class_as<- reactive({
+    # browser()
+    ls1<-data_col_Class_as
+    geom_data_names<-c(datanames)
+    n_data<-length(geom_data_names)
+    Class_as_code<-NULL
+
+    for (i in 1:n_data){
+      try({
+        mptable<-data_col_Class_as[[i]]
+        Class_as_code[i]<-mptable()
+      },silent = TRUE)
+    }
+    Class_as_text<-unlist(Class_as_code)
+    
+    Class_as_text<-Class_as_text[!is.null(Class_as_text)]
+    # browser()
+    if (is.null(Class_as_text)) {
+       return()
+    }
+
+    ClassAs_text<-paste(Class_as_text,seq =";")
+    # browser()
+    return(ClassAs_text)
+  })
 
   #get geom type Codes
   get_geomtype_codes<- reactive({
@@ -189,6 +216,10 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
   })
 
   get_plot_codes <- reactive({
+    ##输出数据的列类型转换代码
+    
+    gg_data_col_Class_as<-get_data_col_Class_as()
+    cat(file=stderr(), "\n gg_data_col_Class_as is ",gg_data_col_Class_as)
     # browser()
     gg_geom_codes<-get_geom_codes()
     cat(file=stderr(), "\n gg_geom_codes is ",gg_geom_codes)
@@ -204,7 +235,9 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
     cat(file=stderr(), "\n gg_facets_codes is ",gg_facets_codes)
 
     gg2<-c("ggplot() ",gg_geom_codes, gg_coord_code, gg_themes_codes,gg_facets_codes)
-    gg2<-paste(sep="+",collapse ="+",gg2)
+    gg2<-paste(sep="+",collapse ="+",c(gg2))
+    gg2<-paste(c(gg_data_col_Class_as,gg2),sep="",collapse ="")
+
     cat(file=stderr(), "\n gg2 is ",gg2)
     # req(gg_geom_codes)
     if (is.null(gg_geom_codes)||gg_geom_codes==""){
@@ -225,7 +258,17 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
     # output_plot_height <- reactive({input$output_plot_height})
     # output_plot_dpi <- reactive({input$output_plot_dpi})
 
-    eval(parse_expr(as.character(get_plot_codes())))
+    # eval(parse_exprs(as.character(get_plot_codes())))
+    local({
+      aa<-parse_exprs(as.character(get_plot_codes()))
+      for (i in seq_along(aa)){
+        # browser()
+        res<-eval(aa[[i]])
+      }
+      res
+      # browser()
+    } )
+    # browser()
     outfile <- tempfile(fileext='.png')
     ggsave(outfile,#"ggplot.svg",
            # path=out_dir<-tempdir(),
@@ -253,11 +296,102 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
     )
   # return(list(get_plot_codes()))
 }
+guiplot_Rexcle_Server <- function(input, output, sesson, data_and_name =NULL, field_groups=NULL) {
+  #基于guiplot_dt_Server 函数修改得到，用于服务colClase_table函数
 
+  ###########################################################
+  ####自定以函数
+  df_tran2typeTable<-function(data){
+    ##用于从数据表格生成一个每个列数据类型的设置表格
+    data<-data
+    Class<-sapply(data, class)
+    Class<-factor(Class,levels=c("","logical","numeric","factor","character"))
+    Name<-names(data)
+    data02<-data.frame(Name,Class)
+    rownames(data02)<-NULL
+    data02
+  }
+
+  txt_colClass<-function(data,typeTab,data_name){
+    ##用于生成将列的类型由当前强制转换为typeTab中指定类型的文字，以便之后通过evalue使用
+    out_txt<-""
+    class_Eq01<-mapply("==",typeTab[,2],sapply(data, class))##原类型和新类型是否一致
+    class_Eq02<-mapply("==",typeTab[,2],"")##新类型是否为空
+    class_Eq<-!mapply(any,class_Eq01,class_Eq02)
+    if(any(class_Eq)){
+      ##获取需要修改类型的列的列名，并将此代码转换为文本
+
+      txt_col_name<-typeTab[class_Eq,1]
+      txt_col_name<-mapply(function(x){paste0("'",x,"'")},txt_col_name)
+      txt_col_name<-if(length(txt_col_name)==1){txt_col_name}else{paste(txt_col_name,collapse=",")}
+      #browser()
+      txt_col_name<-paste0(c("c(",txt_col_name,")"),collapse="" )
+      ##获取需要修改类型的列的拟修改类型，并将此代码转换为文本
+      txt_col_class<-typeTab[class_Eq,2]
+      txt_col_class<-mapply(function(x){paste0("'",x,"'")},txt_col_class)
+      txt_col_class<-if(length(txt_col_class)==1){txt_col_class}else{paste(txt_col_class,collapse=",")}
+      txt_col_class<-paste0(c("c(",txt_col_class,")"),collapse="")
+
+      ##data[txt_col_name]<-colClass_as(data[txt_col_name],txt_col_class)
+      out_txt<-paste0(c("",data_name,"[",txt_col_name,"]<-colClass_as(",data_name,"[",txt_col_name,"],",txt_col_class,")"),collapse="")
+    }else {
+       out_txt<-NULL
+    }
+    out_txt
+  }
+  ###end
+  ############################################################
+
+  ###########
+  ###正文
+  ##数据准备
+  dataname<-c(data_and_name[[2]])
+  data<-data_and_name[[1]]#####原始数据表格
+  data02<-df_tran2typeTable(data)#####准备好的显示每个列类型的数据表格
+  columns02 = data.frame(
+    width= c(150, 120),
+    #type=c('text', 'autocomplete'),
+    readOnly=c(TRUE,FALSE)
+  )
+  ##列类型设置表格输出  
+  output$Rexcle_tb <- renderExcel(excelTable(
+	  data=data02,
+		columns = columns02,
+		allowInsertRow = FALSE,
+		allowInsertColumn = FALSE,
+		allowDeleteRow = FALSE,
+		allowDeleteColumn = FALSE,
+		allowRenameColumn = FALSE,
+		allowComments = FALSE,
+		rowDrag = FALSE,
+		columnSorting = FALSE,
+		digits = NA,
+		contextMenu =function() {FALSE},
+		onselection= DT::JS("
+		  function(el, x1, y1, x2, y2, origin){
+  		  if(x1 == x2 && y1 == y2) {
+			var cell = jexcel.current.records[y1][x1]
+  		    jexcel.current.openEditor(jexcel.current.records[y1][x1], false);
+			cell.children[0].dropdown.close(true)
+		    }
+		  }
+    ")
+	))
+  ###########
+  ###输出用于在绘图中使用的列类型转换的代码
+  # browser()
+  return(list(colClass_table=reactive({
+      text=txt_colClass(data=data,excel_to_R(input$Rexcle_tb),data_name=dataname)
+      return(text)
+    })
+  ))
+  #end
+  #################################
+}
 
 guiplot_dt_Server <- function(input, output, sesson, data_and_name =NULL, field_groups=NULL) {
   #server = FALSE
-
+  #browser()
   #panel的名字dataname#################################
   dataname<-c(data_and_name[[2]])
   output$tab1 <-renderText(dataname)

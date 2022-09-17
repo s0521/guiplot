@@ -8,7 +8,7 @@
 #' @return Export files(png and pdf of plot) to a temporary directory, or user-defined folders.
 #' @import shiny ggplot2 svglite R6
 #' @importFrom DT datatable DTOutput renderDT JS editData formatStyle
-#' @importFrom rlang parse_expr expr
+#' @importFrom rlang parse_expr parse_exprs expr
 #' @importFrom stats na.omit
 #' @importFrom magrittr %>%
 #' @examples
@@ -119,9 +119,35 @@ guiplot <- function(..., out_dir = getwd()) {
           data_and_name = res_data[j,],
           field_groups = field_groups
         )
+        # col_class_item<-NULL
+        # col_class_item<- callModule(
+        #   module = guiplot_Rexcle_Server,
+        #   id = Parname,
+        #   data_and_name = res_data[j,],
+        #   field_groups = field_groups
+        # )
+
           mp_table[j]<-mp_item
       }
       mp_table
+    })
+    colClass_table<-reactive({
+      #基于mp table函数修改得到，用于传递给列类型处理服务相应的需要的参数
+      col_class_table<-list()
+    # browser()
+      for (j in 1:nrow(res_data)){
+        Parname<-paste(sep="","data_panae_",j)
+        col_class_item<-NULL
+    # browser()
+        col_class_item<- callModule(
+          module = guiplot_Rexcle_Server,
+          id = Parname,
+          data_and_name = res_data[j,],
+          field_groups = field_groups
+        )
+          col_class_table[j]<-col_class_item
+      }
+      col_class_table
     })
     #
     ##############################
@@ -130,7 +156,8 @@ guiplot <- function(..., out_dir = getwd()) {
       module = guiplot_plot_Server,
       id = "guiplot",
       data = mptable(),
-      dataname=res_data[,2]
+      dataname=res_data[,2],
+      data_col_Class_as=colClass_table()
     )
 
     callModule(

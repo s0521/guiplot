@@ -153,24 +153,32 @@ geom_type_ui<-function(id="guiplot"){
 #     plot_ui("guiplot")
 #   )
 # }
-setup_tabPanel_panel2<-function(id="guiplot") {
-  ns <- NS(id)
-  tabPanel(
-    'test01',
-    fluidPage(
-      style='float:left',
-      'test02'
-    )
-  )
-}
-
-
 setup_tabPanel_panel<-function(id="guiplot") {
   ns <- NS(id)
   tabPanel(
     textOutput(ns('tab1')),
     fluidPage(
       style='float:left',
+      fluidRow(
+        column(width = 2,
+          excelOutput(ns('Rexcle_tb'))
+        ),
+        column(width = 7,
+          DTOutput(ns('dt'))
+        )
+      )
+    )
+  )
+}
+
+
+setup_tabPanel_panel01<-function(id="guiplot") {
+  ns <- NS(id)
+  tabPanel(
+    textOutput(ns('tab1')),
+    fluidPage(
+      style='float:left',
+      # excelOutput("Rexcle_tb"),
       DTOutput(ns('dt'))
     )
   )
@@ -213,7 +221,8 @@ results_ui<-function(id="guiplot") {
       ),
       "other",
       tabPanel(
-        "other"
+        "other",
+        verbatimTextOutput(ns('Results_Text2'))
       )
     )
 
@@ -347,7 +356,7 @@ object_options_ui<-function(id="guiplot") {
 				fluidPage(
 				 "Preview Plot Set(pixels)",
 					style='float:left',
-					DTOutput(ns('vline'), width = "100%", height = "auto")
+					excelOutput(ns('vline'))
 				)
 			),
 		  tabPanel("Y(hline)"),
@@ -358,16 +367,16 @@ object_options_ui<-function(id="guiplot") {
   )
 }
 
-setup_tabPanel_panel<-function(id="guiplot") {
-  ns <- NS(id)
-  tabPanel(
-    textOutput(ns('tab1')),
-    fluidPage(
-      style='float:left',
-      DTOutput(ns('dt'))
-    )
-  )
-}
+# setup_tabPanel_panel<-function(id="guiplot") {
+#   ns <- NS(id)
+#   tabPanel(
+#     textOutput(ns('tab1')),
+#     fluidPage(
+#       style='float:left',
+#       DTOutput(ns('dt'))
+#     )
+#   )
+# }
 
 
 guiplotUI <- fluidPage(
