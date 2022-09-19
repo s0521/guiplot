@@ -161,7 +161,7 @@ setup_tabPanel_panel<-function(id="guiplot") {
       style='float:left',
       fluidRow(
         column(width = 2,
-          excelOutput(ns('Rexcle_tb'))
+          excelOutput(ns('Rexcle_tb'), width = "100%", height = "100%")
         ),
         column(width = 7,
           DTOutput(ns('dt'))
@@ -367,7 +367,7 @@ object_options_ui<-function(id="guiplot") {
 				fluidPage(
 				 "Preview Plot Set(pixels)",
 					style='float:left',
-					excelOutput(ns('vline'))
+					excelOutput(ns('vline'), width = "100%", height = "100%")
 				)
 			),
 		  tabPanel("Y(hline)"),
