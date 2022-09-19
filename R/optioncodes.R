@@ -114,7 +114,28 @@ axis_to_coord_code<-function(axis,x_y){
 	}
 	return(one_axis)
 }
+plot_labs_code<-function(x=NULL,y=NULL,title=NULL,subtitle=NULL,caption=NULL,tag=NULL){
+	labs_value<-c(x,y,title,subtitle,caption,tag)
+	# browser()
+	labs_codes<-c(
+	  paste0("x = '",x,"'"),
+	  paste0("y = '",y,"'"),
+	  paste0("title = '",title,"'"),
+	  paste0("subtitle = '",subtitle,"'"),
+	  paste0("caption = '",caption,"'"),
+	  paste0("tag = '",tag,"'")
+	)
+	labs_code<-labs_codes[!sapply(labs_value,function(a)any(is_empty(a),is.null(a),a==""))]
 
+	if(is.null(any(is_empty(labs_code),is.null(labs_code),labs_code==""))){
+		return()
+	}else {
+		labs_code <-paste0(labs_code,collapse =",")
+		labs_code <-paste0("theme(text=element_text(family='Songti SC'))+labs(",labs_code,")")
+		return(labs_code)
+	}
+
+}
 plot_themes_code<-function(radioButtons_plot_themes){
   arry4<-c(switch(
     radioButtons_plot_themes$plot_themes,
@@ -133,5 +154,9 @@ plot_themes_code<-function(radioButtons_plot_themes){
   return(plot_themes)
 }
 
-
+UGC_code<-function(UGC_text){
+	a<-UGC_text
+	if(any(is_empty(a),is.null(a),a==""))a<-""
+	return(a)
+}
 

@@ -260,6 +260,15 @@ object_options_ui<-function(id="guiplot") {
                                   "theme_void" = "theme_void",
                                   "theme_minimal" = "theme_minimal")
                                 )
+            ),
+            column(3,
+                  textInput(ns('title_label'),'title'),
+                  textInput(ns('subtitle_label'),'subtitle'),
+                  textInput(ns('caption_label'),'caption'),
+                  textInput(ns('tag_label'),'tag')
+            ),
+            column(3,
+                  textAreaInput(ns("UGC"), "Additional custom R language code", rows = 10)
             )
           )
         )
@@ -301,7 +310,8 @@ object_options_ui<-function(id="guiplot") {
                             "log2" = "log2",
                             "logit" = "logit",
                             "probability" = "probability",
-                            "sqrt" = "sqrt"))
+                            "sqrt" = "sqrt")),
+              textInput(ns('X_Axis_label'),'X Axis label')
             ),
             column(3,
                    radioButtons(ns("X_Range"), "Range",
@@ -328,7 +338,8 @@ object_options_ui<-function(id="guiplot") {
                                   "log2" = "log2",
                                   "logit" = "logit",
                                   "probability" = "probability",
-                                  "sqrt" = "sqrt"))
+                                  "sqrt" = "sqrt")),
+                  textInput(ns('Y_Axis_label'),'Y Axis label')
             ),
             column(3,
                    radioButtons(ns("Y_Range"), "Range",

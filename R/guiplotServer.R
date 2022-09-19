@@ -193,11 +193,26 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
       expand_u=input$Y_expand_u
     )
     a<-coord_trans_code(axis_x,axis_y)
+    if(nchar(a)<17){a=NULL }
+    ###labs
+    plot_labs_codes<-plot_labs_code(
+      input$X_Axis_label,
+      input$Y_Axis_label,
+      input$title_label,
+      input$subtitle_label,
+      input$caption_label,
+      input$tag_label
+    )
+    ###
+    
+    coord_labs_codes<-c(a,plot_labs_codes)
+    coord_labs_codes<-coord_labs_codes[!sapply(coord_labs_codes,function(a)any(is_empty(a),is.null(a),a==""))]
+    coord_labs_codes<-paste0(collapse ="+",c(coord_labs_codes))
     # browser()
-    if(nchar(a)<17)
+    if(any(is_empty(coord_labs_codes),is.null(coord_labs_codes),coord_labs_codes==""))
       return()
     # return(coord_trans_code(axis_x,axis_y))
-    return(a)
+    return(coord_labs_codes)
   })
 
 
@@ -210,6 +225,18 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
     a<-plot_themes_code(p_plot_thems)
     # browser()
     if(nchar(a)<4)
+      return()
+    # return(coord_trans_code(axis_x,axis_y))
+    return(a)
+  })
+
+  #get User Generat codes
+  get_UGC_codes <- reactive({
+    # browser()
+      UGC=input$UGC
+      a<-UGC_code(UGC)
+    # browser()
+    if(a=="")
       return()
     # return(coord_trans_code(axis_x,axis_y))
     return(a)
@@ -234,7 +261,11 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
     gg_facets_codes<-get_facets_codes()
     cat(file=stderr(), "\n gg_facets_codes is ",gg_facets_codes)
 
-    gg2<-c("ggplot() ",gg_geom_codes, gg_coord_code, gg_themes_codes,gg_facets_codes)
+    gg_UGC_codes<-get_UGC_codes()
+    cat(file=stderr(), "\n gg_UGC_codes is ",gg_UGC_codes)
+
+    gg2<-c("ggplot() ",gg_geom_codes, gg_coord_code, gg_themes_codes,gg_facets_codes,gg_UGC_codes)
+    gg2<-gg2[!sapply(gg2,function(a)any(is.null(a),a==""))]
     gg2<-paste(sep="+",collapse ="+",c(gg2))
     gg2<-paste(c(gg_data_col_Class_as,gg2),sep="",collapse ="")
 

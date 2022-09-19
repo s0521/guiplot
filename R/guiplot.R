@@ -9,7 +9,7 @@
 #' @import shiny ggplot2 svglite R6
 #' @importFrom excelR excelOutput renderExcel excelTable excel_to_R
 #' @importFrom DT datatable DTOutput renderDT JS editData formatStyle
-#' @importFrom rlang parse_expr parse_exprs expr
+#' @importFrom rlang parse_expr parse_exprs expr is_empty
 #' @importFrom stats na.omit
 #' @importFrom magrittr %>%
 #' @examples
