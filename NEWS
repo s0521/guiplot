@@ -1,5 +1,12 @@
 NEWS for the guiplot package
 
+Changes for 0.2.2
+------------------
+* Add
+新增labs：标题、坐标轴的轴标题等标签的设置
+新增用户自定以代码输入窗，用户可以额外属于自定的的代码，以便进一步的修改时图表。
+新导入了一个函数rlang::is_empty
+
 Changes for 0.2.1
 ------------------
 * Add

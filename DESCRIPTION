@@ -1,7 +1,7 @@
 Package: guiplot
 Type: Package
 Title: User-Friendly GUI Plotting Tools
-Version: 0.2.1
+Version: 0.2.2
 Author: Fu Yongchao <3212418315@qq.com>
 Maintainer: Fu Yongchao <3212418315@qq.com>
 Description: Create a user-friendly plotting GUI for R.
