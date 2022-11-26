@@ -587,7 +587,39 @@ guiplot_layout_updata_server<-function(input, output, session){
 
 
 }
+guiplot_geom_Additional_UGC_dt_Server <- function(input, output, sesson) {
+  #geom_Additional_UGC
+  #get geom type Codes
+  get_geomtype_codes<- reactive({
+    c(
+      input$geom_type_1variable,
+      input$geom_type_2variable,
+      input$geom_type_other
+    )
+  })  
 
+  output$dt = renderDT({
+      datatable(
+        env_guiplot$dat,
+        rownames = FALSE,
+        editable = list(target = "cell"),
+        selection = list(mode = 'single', target = 'cell'),
+        callback = JS(callback),
+        extensions = c('AutoFill'),
+        container =sketch,
+        class = 'table-hover',
+        options = list(
+          autoFill = list(alwaysAsk=FALSE),
+          columnDefs = list(
+            list(targets = c(2), searchable = FALSE),
+            list(targets = c(2), visible=FALSE)
+          ),
+          search = list(search = get_textin01())
+        ),
+        dom = 't',paging = FALSE, ordering = FALSE
+      )
+  })
+}
 #################################
 #################################
 #################################

@@ -78,54 +78,19 @@ geom_type_ui<-function(id="guiplot"){
              "geom type",
              checkboxGroupInput(ns("geom_type_1variable"),
                                 label = NULL, #h3("geom type of 1 variable"),
-                                choices = list(
-                                  "area",
-                                  "density",
-                                  "dotplot",
-                                  "freqpoly",
-                                  "histogram",
-                                  "bar",
-                                  "col"
-                                  ),
+                                choices = StaticData_geom_type_1variable,
                                 selected = NULL,
                                 inline=TRUE
                                 ),
              checkboxGroupInput(ns("geom_type_2variable"),
                                 label = NULL, #h3("geom type"),
-                                choices = list(
-                                  "line",
-                                  "point",
-                                  "ribbon",
-                                  "qq_line",
-                                  "quantile",
-                                  "rug",
-                                  "segment",
-                                  "smooth",
-                                  "text",
-                                  "boxplot",
-                                  "violin",
-                                  "bin2d",
-                                  "density2d",
-                                  "path",
-                                  "step"
-                                ),
+                                choices = StaticData_geom_type_2variable,
                                 selected = c("point","line"),
                                 inline=TRUE
              ),
              checkboxGroupInput(ns("geom_type_other"),
                                 label = NULL, #h3("geom type"),
-                                choices = list(
-                                  "crossbar",
-                                  "errorbar",
-                                  "linerange",
-                                  "pointrange",
-                                  "map",
-                                  "contour",
-                                  "raster",
-                                  "tile",
-                                  "polygon",
-                                  "rect"
-                                ),
+                                choices = StaticData_geom_type_other,
                                 selected = NULL,
                                 inline=TRUE
              ),
@@ -377,7 +342,12 @@ object_options_ui<-function(id="guiplot") {
       ),
     "Geom",
       tabPanel(
-        "geom_Additional_UGC"
+        "geom_Additional_UGC",
+        tagList(
+          fluidRow(
+            DTOutput(ns('geom_Additional_UGC'))
+          )
+        )
       )
   )
 }
