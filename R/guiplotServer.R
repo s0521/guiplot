@@ -271,7 +271,7 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
 
     cat(file=stderr(), "\n gg2 is ",gg2)
     # req(gg_geom_codes)
-    if (is.null(gg_geom_codes)||gg_geom_codes==""){
+    if (all(is.null(gg_geom_codes)||gg_geom_codes=="",is.null(gg_UGC_codes)||gg_UGC_codes=="")){
         # return(ggplot())
       return("ggplot()")
     }else{
