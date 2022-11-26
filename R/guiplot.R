@@ -97,6 +97,7 @@ guiplot <- function(..., out_dir = getwd()) {
 
     text_panels<-reactive({
       # browser()
+      #用于动态的显示设置标签页中的所有数据，作为一个标签页
       a<-NULL
       b<-NULL
       for (j in 1:nrow(res_data)){

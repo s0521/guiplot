@@ -160,7 +160,7 @@ setup_tabPanel_panel<-function(id="guiplot") {
     fluidPage(
       style='float:left',
       fluidRow(
-        column(width = 2,
+        column(width = 3,
           excelOutput(ns('Rexcle_tb'), width = "100%", height = "100%")
         ),
         column(width = 7,
@@ -358,23 +358,27 @@ object_options_ui<-function(id="guiplot") {
       tabPanel(
         "Y2"
       ),
-    tabPanel(
-      "Reference Lines ",
-	  tabsetPanel(
-		  tabPanel(
-				"X(vline)",
-				#DTOutput(ns('vline'))
-				fluidPage(
-				 "Preview Plot Set(pixels)",
-					style='float:left',
-					excelOutput(ns('vline'), width = "100%", height = "100%")
-				)
-			),
-		  tabPanel("Y(hline)"),
-		  tabPanel("Y2()"),
-		  tabPanel("unity(abline)")
-	  )
-    )
+      tabPanel(
+        "Reference Lines ",
+      tabsetPanel(
+        tabPanel(
+          "X(vline)",
+          #DTOutput(ns('vline'))
+          fluidPage(
+          "Preview Plot Set(pixels)",
+            style='float:left',
+            excelOutput(ns('vline'), width = "100%", height = "100%")
+          )
+        ),
+        tabPanel("Y(hline)"),
+        tabPanel("Y2()"),
+        tabPanel("unity(abline)")
+      )
+      ),
+    "Geom",
+      tabPanel(
+        "geom_Additional_UGC"
+      )
   )
 }
 
