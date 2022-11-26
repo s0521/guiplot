@@ -116,7 +116,7 @@ axis_to_coord_code<-function(axis,x_y){
 }
 plot_labs_code<-function(x=NULL,y=NULL,title=NULL,subtitle=NULL,caption=NULL,tag=NULL){
 	labs_value<-c(x,y,title,subtitle,caption,tag)
-	# browser()
+	 # browser()
 	labs_codes<-c(
 	  paste0("x = '",x,"'"),
 	  paste0("y = '",y,"'"),
@@ -127,7 +127,7 @@ plot_labs_code<-function(x=NULL,y=NULL,title=NULL,subtitle=NULL,caption=NULL,tag
 	)
 	labs_code<-labs_codes[!sapply(labs_value,function(a)any(is_empty(a),is.null(a),a==""))]
 
-	if(is.null(any(is_empty(labs_code),is.null(labs_code),labs_code==""))){
+	if(any(is_empty(labs_code),is.null(labs_code),labs_code=="")){
 		return()
 	}else {
 		labs_code <-paste0(labs_code,collapse =",")
