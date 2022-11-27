@@ -345,7 +345,14 @@ object_options_ui<-function(id="guiplot") {
         "geom_Additional_UGC",
         tagList(
           fluidRow(
-            helpText("For Example"),
+            helpText("
+            geom Additional User Customer Code.
+            For Example：
+            geom_line(data=data,aes(x=x,y=y, geom_Additional_AesCode ), geom_Additional_Code )
+            usual use Code:
+            method = 'lm' ,method = 'glm' 
+            color='red', color='blue', shape=2
+            "),
             DTOutput(ns('geom_Additional_UGC'))
           )
         )

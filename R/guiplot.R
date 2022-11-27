@@ -153,7 +153,7 @@ guiplot <- function(..., out_dir = getwd()) {
     })
     #
     ##############################
-    Moudel_plot_codes <- callModule(
+    geom_Additional_UGC_codes_Table <- callModule(
       module = guiplot_geom_Additional_UGC_dt_Server,
       id = "guiplot"
     )
@@ -163,7 +163,8 @@ guiplot <- function(..., out_dir = getwd()) {
       id = "guiplot",
       data = mptable(),
       dataname=res_data[,2],
-      data_col_Class_as=colClass_table()
+      data_col_Class_as=colClass_table(),
+      geom_Additional_UGC_codes_Table = geom_Additional_UGC_codes_Table
     )
 
     callModule(

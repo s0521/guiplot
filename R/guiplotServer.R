@@ -60,9 +60,8 @@ guiplot_result_Server <- function(input, output, session, out_dir =NULL, Moudel_
   })
 }
 
-guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NULL,data_col_Class_as=NULL) {
+guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NULL,data_col_Class_as=NULL,geom_Additional_UGC_codes_Table=NULL) {
   #browser()
-  # browser()
   #get data_col_Class_as TextCode获取数据列类型转换的代码文本
   get_data_col_Class_as<- reactive({
     # browser()
@@ -78,7 +77,7 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
       },silent = TRUE)
     }
     Class_as_text<-unlist(Class_as_code)
-    
+
     Class_as_text<-Class_as_text[!is.null(Class_as_text)]
     # browser()
     if (is.null(Class_as_text)) {
@@ -98,6 +97,14 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
       input$geom_type_other
     )
   })
+
+  #get geom_User Costomer Codes
+  # browser()
+  # bb <- geom_Additional_UGC_codes_Table
+  # type_UGC <- bb
+  # ls02 <- geom_Additional_UGC_codes_Table$use_geomtype
+  # type_UGC <- geom_Additional_UGC_codes_Table$[ls02]
+  # type_Aes_UGC <- geom_Additional_UGC_codes_Table$[ls02]
 
   #get geom Codes
   get_geom_codes<- reactive({
@@ -124,6 +131,9 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
       mark<-GetMappingValue(mptable(),11)
       # type<-c("point","line")
       type<-get_geomtype_codes()
+      ##geom User Customer Code
+      type_UGC <- geom_Additional_UGC_codes_Table()
+
       code<-geomCode(
         type=type,
         data=dataname,
@@ -134,7 +144,8 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
         group=group,
         color=color,
         linetype=linetype,
-        shape=mark
+        shape=mark,
+        type_UGC=type_UGC
         )
       if (!is.null(code))
         data_code[i]<-code
@@ -204,7 +215,7 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
       input$tag_label
     )
     ###
-    
+
     coord_labs_codes<-c(a,plot_labs_codes)
     coord_labs_codes<-coord_labs_codes[!sapply(coord_labs_codes,function(a)any(is_empty(a),is.null(a),a==""))]
     coord_labs_codes<-paste0(collapse ="+",c(coord_labs_codes))
@@ -244,7 +255,7 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
 
   get_plot_codes <- reactive({
     ##输出数据的列类型转换代码
-    
+
     gg_data_col_Class_as<-get_data_col_Class_as()
     cat(file=stderr(), "\n gg_data_col_Class_as is ",gg_data_col_Class_as)
     # browser()
@@ -384,7 +395,7 @@ guiplot_Rexcle_Server <- function(input, output, sesson, data_and_name =NULL, fi
     #type=c('text', 'autocomplete'),
     readOnly=c(TRUE,FALSE)
   )
-  ##列类型设置表格输出  
+  ##列类型设置表格输出
   output$Rexcle_tb <- renderExcel(excelTable(
 	  data=data02,
 		columns = columns02,
@@ -593,13 +604,13 @@ guiplot_geom_Additional_UGC_dt_Server <- function(input, output, sesson) {
   # browser()
   ###设定geomUGC表格的初始结构与数值
   StaticData_geom_type<-c(StaticData_geom_type_1variable, StaticData_geom_type_2variable, StaticData_geom_type_other)
-  int_use_geomtype<-""
+  int_use_geomtype<-FALSE
   int_geom_Additional_Code<-""
   int_geom_Additional_AesCode<-""
 
   ###设定geomUGC表格的初始结构与数值，放入一个dataframe中
   int_geomtype_UGC_table<-data.frame(
-    
+
     use_geomtype=int_use_geomtype
     ,geom_type=StaticData_geom_type
     ,geom_Additional_Code=int_geom_Additional_Code
@@ -658,10 +669,20 @@ guiplot_geom_Additional_UGC_dt_Server <- function(input, output, sesson) {
     # 由于仅包含一个observe，仅能更新环境变量中的数据，而不是同时更新DT表格的显示，所以此处额外增加了一个info的reactive数值，作为中转，
     # 并且在observer和DT中都同时引用此reactive，以便达成更新环境中的表格时更新DT表格显示
     ########
-    # browser() 
+    # browser()
     env_geomtype_UGC$table[2:4] <- editData(env_geomtype_UGC$table[2:4], table_edit_info(), 'geom_Additional_UGC')
   })
 
+  # return(env_geomtype_UGC$table)
+
+  return(
+    reactive({
+    geomtype_UGC_table()
+    table_edit_info()
+      ls <- env_geomtype_UGC$table
+      return(ls)
+    })
+  )
 }
 
 #################################

@@ -1,5 +1,5 @@
 #ggplot codes
-geomCode<-function(type,data,x,y,ymin=NULL,ymax=NULL,group=NULL,color=NULL,linetype=NULL,shape=NULL){
+geomCode<-function(type,data,x,y,ymin=NULL,ymax=NULL,group=NULL,color=NULL,linetype=NULL,shape=NULL,type_UGC=NULL){
   # browser()
 	# if (is.null(data)||!is.null(x)||!is.null(y)||!is.null(ymin))
   if (is.null(data)&&is.null(x)&&is.null(y)&&is.null(ymin))
@@ -7,6 +7,7 @@ geomCode<-function(type,data,x,y,ymin=NULL,ymax=NULL,group=NULL,color=NULL,linet
   # browser()
   name<-data
 	type<-GetTypeText(type)
+  type_UGC$geom_type <- GetTypeText(type_UGC$geom_type)
 	data<-GetDataText(name)
 	x<-GetXText(x)
 	y<-GetYText(y)
@@ -18,9 +19,9 @@ geomCode<-function(type,data,x,y,ymin=NULL,ymax=NULL,group=NULL,color=NULL,linet
 	shape<-GetGroupText(shape)
 	if(is.null(x)&&is.null(y)&&(is.null(ymin)&&is.null(ymax))){return()}else{
   	if(!is.null(y)||!(is.null(ymin)&&is.null(ymax))){
-  	  geomCode<-SetEveryY(type,data,x,y,ymin,ymax,group,color,linetype,shape)
+  	  geomCode<-SetEveryY(type,data,x,y,ymin,ymax,group,color,linetype,shape,type_UGC)
   	}else{
-  	  geomCode<-GetGeomCode(type,data,x,y,ymin,ymax,group,color,linetype,shape)
+  	  geomCode<-GetGeomCode(type,data,x,y,ymin,ymax,group,color,linetype,shape,type_UGC)
   	}
 	}
 	return(geomCode)
@@ -28,37 +29,42 @@ geomCode<-function(type,data,x,y,ymin=NULL,ymax=NULL,group=NULL,color=NULL,linet
 }
 
 #anasisy Y
-SetEveryY<-function(type,data,x,y,ymin=NULL,ymax=NULL,group=NULL,color=NULL,linetype=NULL,shape=NULL){
+SetEveryY<-function(type,data,x,y,ymin=NULL,ymax=NULL,group=NULL,color=NULL,linetype=NULL,shape=NULL,type_UGC=NULL){
   if(is.null(y)&&(is.null(ymin)&&is.null(ymax)))
     return()
   if(!is.null(y)){
     j<-1L
     geomCode<-c()
     for(i in y){
-      geomCode[j]<-GetGeomCode(type,data,x,i,ymin,ymax,group,color,linetype,shape)
+      geomCode[j]<-GetGeomCode(type,data,x,i,ymin,ymax,group,color,linetype,shape,type_UGC)
       j<-j+1
     }
     geomCodes<-paste(geomCode,collapse ="+")
     geomCodes
   }else{
-    GetGeomCode(type,data,x,y,ymin,ymax,group,color,linetype,shape)
+    GetGeomCode(type,data,x,y,ymin,ymax,group,color,linetype,shape,type_UGC)
   }
 }
 
 
 
 #Get ggplot Geom Codes
-GetGeomCode<-function(type,data,x,y,ymin=NULL,ymax=NULL,group=NULL,color=NULL,linetype=NULL,shape=NULL){
+GetGeomCode<-function(type,data,x,y,ymin=NULL,ymax=NULL,group=NULL,color=NULL,linetype=NULL,shape=NULL,type_UGC=NULL){
   if(is.null(type))
     return()
   # browser()
-  ls1<-paste(sep=",",collapse =",",c(x,y,ymin,ymax,group,color,linetype,shape))
-  aes<-paste(sep="","aes","(",ls1,")")
-
   j<-1
   Code<-c()
   for(i in type){
-    Code[j]<-paste(sep="",i,"(",paste(sep=",",data,aes),")")
+    ##get type_UGC_item
+    type_UGC_item <- type_UGC[type_UGC$geom_type %in% i,]
+    # browser()
+    ###get aes Code 02
+    ls1<-paste1(sep=",",x,y,ymin,ymax,group,color,linetype,shape,type_UGC_item$geom_Additional_AesCode)
+    aes<-paste(sep="","aes","(",ls1,")")
+    
+    ##get code
+    Code[j]<-paste(sep="",i,"(",paste1(sep=",",data,aes,type_UGC_item$geom_Additional_Code),")")
                    j<-j+1
   }
   Codes<-paste(Code,collapse ="+")
