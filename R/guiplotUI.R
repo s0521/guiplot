@@ -233,6 +233,10 @@ object_options_ui<-function(id="guiplot") {
                   textInput(ns('tag_label'),'tag')
             ),
             column(3,
+                  helpText("For example:
+                  soomth(data,aes(x,y),method='lm');
+                  legend.position='none'
+                  "),
                   textAreaInput(ns("UGC"), "Additional custom R language code", rows = 10)
             )
           )
@@ -345,14 +349,9 @@ object_options_ui<-function(id="guiplot") {
         "geom_Additional_UGC",
         tagList(
           fluidRow(
-            helpText("
-            geom Additional User Customer Code.
-            For Example：
-            geom_line(data=data,aes(x=x,y=y, geom_Additional_AesCode ), geom_Additional_Code )
-            usual use Code:
-            method = 'lm' ,method = 'glm' 
-            color='red', color='blue', shape=2
-            "),
+            "geom Additional User Customer Code",
+            helpText("For Example:  geom_line(data=data,aes(x=x,y=y, geom_Additional_AesCode ), geom_Additional_Code )"),
+            helpText("Usual use Code: method = 'lm' , method = 'glm' ,  color='red', color='blue' , shape=2"),
             DTOutput(ns('geom_Additional_UGC'))
           )
         )
