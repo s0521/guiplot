@@ -590,36 +590,80 @@ guiplot_layout_updata_server<-function(input, output, session){
 guiplot_geom_Additional_UGC_dt_Server <- function(input, output, sesson) {
   #geom_Additional_UGC
   #get geom type Codes
-  get_geomtype_codes<- reactive({
+  # browser()
+  ###设定geomUGC表格的初始结构与数值
+  StaticData_geom_type<-c(StaticData_geom_type_1variable, StaticData_geom_type_2variable, StaticData_geom_type_other)
+  int_use_geomtype<-""
+  int_geom_Additional_Code<-""
+  int_geom_Additional_AesCode<-""
+
+  ###设定geomUGC表格的初始结构与数值，放入一个dataframe中
+  int_geomtype_UGC_table<-data.frame(
+    
+    use_geomtype=int_use_geomtype
+    ,geom_type=StaticData_geom_type
+    ,geom_Additional_Code=int_geom_Additional_Code
+    ,geom_Additional_AesCode=int_geom_Additional_AesCode
+  )
+    #新建一个环境，用于储存需要跨函数修改的变量
+  env_geomtype_UGC<- new.env(parent = emptyenv())
+  env_geomtype_UGC$table <- int_geomtype_UGC_table
+
+  get_use_geomtype<- reactive({
+    ###去读哪些geom被选中
     c(
       input$geom_type_1variable,
       input$geom_type_2variable,
       input$geom_type_other
     )
-  })  
+  })
 
-  output$dt = renderDT({
+  geomtype_UGC_table<- reactive({
+      # browser()
+      ###动态更新表格中use_geomtype列的数值
+      use_geomtype<-StaticData_geom_type %in% get_use_geomtype()
+      env_geomtype_UGC$table$use_geomtype <- use_geomtype
+      return(env_geomtype_UGC$table)
+  })
+
+  output$geom_Additional_UGC = renderDT({
+    ###可视化geomtype_UGC_table表格中的内容
+    geomtype_UGC_table()
+    table_edit_info()
       datatable(
-        env_guiplot$dat,
+        env_geomtype_UGC$table,
         rownames = FALSE,
-        editable = list(target = "cell"),
+        editable = list(target = "cell", disable = list(columns = c(0,1))),
         selection = list(mode = 'single', target = 'cell'),
-        callback = JS(callback),
         extensions = c('AutoFill'),
-        container =sketch,
         class = 'table-hover',
         options = list(
-          autoFill = list(alwaysAsk=FALSE),
+          autoFill = list(alwaysAsk=FALSE, columns = c(2, 3)),
+          dom = 't',paging = FALSE, ordering = FALSE,
           columnDefs = list(
-            list(targets = c(2), searchable = FALSE),
-            list(targets = c(2), visible=FALSE)
+            list(targets = c(1:3), searchable = FALSE),
+            list(targets = c(0), visible=FALSE)
           ),
-          search = list(search = get_textin01())
-        ),
-        dom = 't',paging = FALSE, ordering = FALSE
+          search = list(search = "true")
+        )
       )
   })
+
+  table_edit_info<- reactive({input$geom_Additional_UGC_cell_edit})###获取celledit的信息
+  observeEvent(input$geom_Additional_UGC_cell_edit, {
+    ###应用celledit的信息更新表格
+    #########
+    #由于DT表格显示时，未显示行名称列，由此导致列数少了1，从而导致info中的列数计算向左偏了1列，所有此处更新编辑的信息时，取子集
+    #########
+    # 由于仅包含一个observe，仅能更新环境变量中的数据，而不是同时更新DT表格的显示，所以此处额外增加了一个info的reactive数值，作为中转，
+    # 并且在observer和DT中都同时引用此reactive，以便达成更新环境中的表格时更新DT表格显示
+    ########
+    # browser() 
+    env_geomtype_UGC$table[2:4] <- editData(env_geomtype_UGC$table[2:4], table_edit_info(), 'geom_Additional_UGC')
+  })
+
 }
+
 #################################
 #################################
 #################################

@@ -345,6 +345,7 @@ object_options_ui<-function(id="guiplot") {
         "geom_Additional_UGC",
         tagList(
           fluidRow(
+            helpText("For Example"),
             DTOutput(ns('geom_Additional_UGC'))
           )
         )

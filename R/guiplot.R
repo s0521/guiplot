@@ -153,6 +153,10 @@ guiplot <- function(..., out_dir = getwd()) {
     })
     #
     ##############################
+    Moudel_plot_codes <- callModule(
+      module = guiplot_geom_Additional_UGC_dt_Server,
+      id = "guiplot"
+    )
 
     Moudel_plot_codes <- callModule(
       module = guiplot_plot_Server,
