@@ -213,7 +213,7 @@ object_options_ui<-function(id="guiplot") {
         "themes",
         tagList(
           fluidRow(
-            column(3,
+            column(2,
                    radioButtons(ns("themes"), "themes",
                                 c("theme_gray" = "theme_gray",
                                   "theme_bw" = "theme_bw",
@@ -232,10 +232,9 @@ object_options_ui<-function(id="guiplot") {
                   textInput(ns('caption_label'),'caption'),
                   textInput(ns('tag_label'),'tag')
             ),
-            column(3,
+            column(4,
                   helpText("For example:
-                  soomth(data,aes(x,y),method='lm');
-                  legend.position='none'
+                  soomth(data,aes(x,y),method='lm')+theme(panel.grid.major  = element_line(colour = 'gray90'))
                   "),
                   textAreaInput(ns("UGC"), "Additional custom R language code", rows = 10)
             )
@@ -368,20 +367,37 @@ object_options_ui<-function(id="guiplot") {
       ),
       tabPanel(
         "Reference Lines ",
-      tabsetPanel(
-        tabPanel(
+        tagList(
+          fluidRow("Usage:geom_*line(*intercept=*intercept,color=*color,size=*size,UserCustomerCode)"),
+          fluidRow(
           "X(vline)",
-          #DTOutput(ns('vline'))
-          fluidPage(
-          "Preview Plot Set(pixels)",
-            style='float:left',
-            excelOutput(ns('vline'), width = "100%", height = "100%")
+            column(3,
+              "","X(vline)",
+              textInput(ns('x_intercept'),'x intercept'),
+              textInput(ns('x_color'),'x color'),
+              textInput(ns('x_size'),'x size'),
+              textInput(ns('x_add_UGC'),'x additional UserCustomerCode')
+            ),
+            column(3,
+              "","Y(hline)",
+              textInput(ns('y_intercept'),'y intercept'),
+              textInput(ns('y_color'),'y color'),
+              textInput(ns('y_size'),'y size'),
+              textInput(ns('y_add_UGC'),'y additional UserCustomerCode')
+            ),
+            column(3,
+              "","lin(abline)",
+              textInput(ns('abline_intercept'),'lin intercept'),
+              textInput(ns('abline_color'),'lin color'),
+              textInput(ns('abline_size'),'lin size'),
+              textInput(ns('abline_add_UGC'),'lin additional UserCustomerCode')
+            ),
+            column(3,
+              checkboxInput(ns('Diagonal_Line'),"Diagonal Line?",value = FALSE),
+              textInput(ns('abline_slope'),'lin slope')
+            )
           )
-        ),
-        tabPanel("Y(hline)"),
-        tabPanel("Y2()"),
-        tabPanel("unity(abline)")
-      )
+        )
       ),
     "Geom",
       tabPanel(
@@ -389,8 +405,8 @@ object_options_ui<-function(id="guiplot") {
         tagList(
           fluidRow(
             "geom Additional User Customer Code",
-            helpText("For Example:  geom_line(data=data,aes(x=x,y=y, geom_Additional_AesCode ), geom_Additional_Code )"),
-            helpText("Usual use Code: method = 'lm' , method = 'glm' ,  color='red', color='blue' , shape=2"),
+            helpText("Usage:  geom_line(data=data,aes(x=x,y=y, geom_Additional_AesCode ), geom_Additional_Code )"),
+            helpText("For Example Code: method = 'lm' , method = 'glm' ,  color='red', color='blue' , shape=2"),
             DTOutput(ns('geom_Additional_UGC'))
           )
         )

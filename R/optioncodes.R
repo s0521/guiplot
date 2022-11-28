@@ -137,7 +137,44 @@ plot_labs_code<-function(x=NULL,y=NULL,title=NULL,subtitle=NULL,caption=NULL,tag
 		labs_code <-paste0("theme(text=element_text(family='Songti SC'))+labs(",labs_code,")")
 		return(labs_code)
 	}
+}
 
+#Reference line codes
+reference_line_code<-function(type=null,intercept=null,color=null,size=null,add_UGC=null,slope=null,Diagonal_Line=FALSE){
+	#将如果空需要剔除的变量分别装入 line_value和line_code
+	line_value<-c(intercept,color,size,slope,add_UGC)
+	#转换下字符
+	ls <- switch(type,
+		v="x",
+		h="y",
+		ab=""
+	)
+
+	line_code<-c(
+	  paste0(ls,"intercept = ",intercept,""),
+	  paste0("color = ",color,""),
+	  paste0("size = ",size,""),
+	  paste0("slope = ",slope,""),
+	  add_UGC
+	)
+
+	#此处剔除掉所有空的变量对应的代码
+	line_code<-line_code[!sapply(line_value,function(a)any(is_empty(a),is.null(a),a==""))]
+
+	if(Diagonal_Line==TRUE){
+		#如果室对角线，则直接输出，无论图形参数中其他是否有
+		line_codes<-paste(sep="",collapse =",",line_code)
+		ref_line_code <- paste0("geom_",type,"line(",line_codes,")")
+		return(ref_line_code)
+	}
+	#如果空则返回空，否则返回代码
+	if(any(is_empty(line_code),is.null(line_code),line_code=="")){
+		return()
+	}else {
+		line_codes<-paste(sep="",collapse =",",line_code)
+		ref_line_code <- paste0("geom_",type,"line(",line_codes,")")
+		return(ref_line_code)
+	}
 }
 plot_themes_code<-function(radioButtons_plot_themes){
   arry4<-c(switch(

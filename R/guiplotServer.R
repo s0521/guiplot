@@ -223,12 +223,49 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
     coord_labs_codes<-coord_labs_codes[!sapply(coord_labs_codes,function(a)any(is_empty(a),is.null(a),a==""))]
     coord_labs_codes<-paste0(collapse ="+",c(coord_labs_codes))
     # browser()
-    if(any(is_empty(coord_labs_codes),is.null(coord_labs_codes),coord_labs_codes==""))
-      return()
+    if(any(is_empty(coord_labs_codes),is.null(coord_labs_codes),coord_labs_codes=="")){return()}
     # return(coord_trans_code(axis_x,axis_y))
     return(coord_labs_codes)
   })
 
+  #get reference line codes
+  get_reference_line_code <- reactive({
+    # browser()
+    #X(vline)
+    X_Line_Code<-reference_line_code(
+      type="v",
+      intercept=input$x_intercept,
+      color=input$x_color,
+      size=input$x_size,
+      add_UGC=input$x_add_UGC,
+      slope=""
+    )
+    #Y(hline)
+    Y_Line_Code<-reference_line_code(
+      type="h",
+      intercept=input$y_intercept,
+      color=input$y_color,
+      size=input$y_size,
+      add_UGC=input$y_add_UGC,
+      slope=""
+    )
+    #lin(abline)
+    AB_Line_Code<-reference_line_code(
+      type="ab",
+      intercept=input$abline_intercept,
+      color=input$abline_color,
+      size=input$abline_size,
+      add_UGC=input$abline_add_UGC,
+      slope=input$abline_slope,
+      Diagonal_Line=input$Diagonal_Line
+    )
+    Line_Code <-list(X_Line_Code,Y_Line_Code,AB_Line_Code)
+    Line_Code <- Line_Code[!sapply(Line_Code,function(a)any(is_empty(a),is.null(a),a==""))]
+
+    if(any(is_empty(Line_Code),is.null(Line_Code),Line_Code=="")){return()}
+    # return(coord_trans_code(axis_x,axis_y))
+    return(Line_Code)
+  })
 
   #get themes codes
   get_plot_themes_codes <- reactive({
@@ -285,6 +322,8 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
     gg_coord_code<-get_coord_trans_codes()
     #cat(file=stderr(), "\n gg_coord_code is ",gg_coord_code)
 
+    gg_reference_line_code<-get_reference_line_code()
+
     gg_themes_codes<-get_plot_themes_codes()
     #cat(file=stderr(), "\n gg_themes_codes is ",gg_themes_codes)
 
@@ -296,7 +335,7 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
     gg_UGC_codes<-get_UGC_codes()
     #cat(file=stderr(), "\n gg_UGC_codes is ",gg_UGC_codes)
 
-    gg2<-c("ggplot() ",gg_geom_codes, gg_coord_code, gg_themes_codes,gg_facets_codes,gg_legend_position_code,gg_UGC_codes)
+    gg2<-c("ggplot() ",gg_geom_codes, gg_coord_code, gg_themes_codes,gg_facets_codes,gg_legend_position_code,gg_reference_line_code,gg_UGC_codes)
     gg2<-gg2[!sapply(gg2,function(a)any(is.null(a),a==""))]
     gg2<-paste(sep="+",collapse ="+",c(gg2))
     gg2<-paste(c(gg_data_col_Class_as,gg2),sep="",collapse ="")
