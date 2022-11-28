@@ -234,7 +234,7 @@ object_options_ui<-function(id="guiplot") {
             ),
             column(7,
                   helpText("For example:
-                  soomth(data,aes(x,y),method='lm')+theme(panel.grid.major  = element_line(colour = 'gray90'))
+                  geom_smooth(data,aes(x,y),method='lm')+theme(panel.grid.major  = element_line(colour = 'gray90'))
                   "),
                   textAreaInput(ns("UGC"), "Additional custom R language code", rows = 10)
             )
