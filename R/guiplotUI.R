@@ -267,6 +267,45 @@ object_options_ui<-function(id="guiplot") {
       tabPanel(
         "Lattice"
       ),
+      tabPanel(
+        "legend",
+        tagList(
+          fluidRow(
+            column(3,
+                  checkboxInput(ns('Legend_Visible'),"Legend Visible?",value = TRUE),
+                   "Legend_Tital_Label",
+                  textInput(ns('Legend_Tital_Color_Label'),'Color Label'),
+                  textInput(ns('Legend_Tital_Shape_Label'),'Shape(mark) Label'),
+                  textInput(ns('Legend_Tital_Linetype_Label'),'linetype Label')
+            ),
+            column(3,
+                   radioButtons(
+                    ns('Legend_Docking'),"Legend_Docking",
+                    c(
+                      "Relative Position"="Relative_Position",
+                      "Absolute Position"="Absolut_Position"
+                    ),
+                    selected =c("Relative_Position")
+                   ),
+                   sliderInput(ns("Legend_X_Offset"),"X Offset%",0,100,90),
+                   sliderInput(ns("Legend_Y_Offset"),"Y Offset%",0,100,50)
+
+            ),
+            column(3,
+                   selectInput(
+                              ns('Relative_Position_Select'),'Relative Position Select',
+                              c(
+                                "top"="top",
+                                "bottom"="bottom",
+                                "left"="left",
+                                "right"="right"
+                              ),
+                              selected =c("right")
+                   ),
+            )
+          )
+        )
+      ),
     "Axes",
       tabPanel(
         "X",

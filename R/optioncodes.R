@@ -114,16 +114,19 @@ axis_to_coord_code<-function(axis,x_y){
 	}
 	return(one_axis)
 }
-plot_labs_code<-function(x=NULL,y=NULL,title=NULL,subtitle=NULL,caption=NULL,tag=NULL){
-	labs_value<-c(x,y,title,subtitle,caption,tag)
-	 # browser()
+plot_labs_code<-function(x=NULL,y=NULL,title=NULL,subtitle=NULL,caption=NULL,tag=NULL,color=NULL,shape=NULL,linetype=NULL){
+	labs_value<-c(x,y,title,subtitle,caption,tag,color,shape,linetype)
+	#  browser()
 	labs_codes<-c(
 	  paste0("x = '",x,"'"),
 	  paste0("y = '",y,"'"),
 	  paste0("title = '",title,"'"),
 	  paste0("subtitle = '",subtitle,"'"),
 	  paste0("caption = '",caption,"'"),
-	  paste0("tag = '",tag,"'")
+	  paste0("tag = '",tag,"'"),
+	  paste0("color = '",color,"'"),
+	  paste0("shape = '",shape,"'"),
+	  paste0("linetype = '",linetype,"'")
 	)
 	labs_code<-labs_codes[!sapply(labs_value,function(a)any(is_empty(a),is.null(a),a==""))]
 
@@ -154,6 +157,28 @@ plot_themes_code<-function(radioButtons_plot_themes){
   return(plot_themes)
 }
 
+#ggplot legend Position codes
+legend_position_code<-function(Legend_Visible="",Legend_Docking="",Relative_Position_Select="",Legend_X_Offset="",Legend_Y_Offset=""){
+	if(Legend_Visible==FALSE){
+		return("theme(legend.position = 'none')")
+	}else{
+		if(Legend_Docking=="Relative_Position"){
+			return(paste0(
+				"theme(legend.position = '",
+				Relative_Position_Select,
+				"')"
+			))
+		}else {
+			return(paste0(
+		   		"theme(legend.position = c(",
+				Legend_X_Offset/100,",", Legend_Y_Offset/100,
+				"))"
+		   ))
+		}
+	}
+}
+
+#ggplot User customer codes
 UGC_code<-function(UGC_text){
 	a<-UGC_text
 	if(any(is_empty(a),is.null(a),a==""))a<-""

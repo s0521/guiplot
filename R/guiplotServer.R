@@ -212,7 +212,10 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
       input$title_label,
       input$subtitle_label,
       input$caption_label,
-      input$tag_label
+      input$tag_label,
+      input$Legend_Tital_Color_Label,
+      input$Legend_Tital_Shape_Label,
+      input$Legend_Tital_Linetype_Label
     )
     ###
 
@@ -236,6 +239,22 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
     a<-plot_themes_code(p_plot_thems)
     # browser()
     if(nchar(a)<4)
+      return()
+    # return(coord_trans_code(axis_x,axis_y))
+    return(a)
+  })
+  #get legend Position codes
+  get_legend_position_code <- reactive({
+    # browser()
+    Code<-legend_position_code(
+      Legend_Visible=input$Legend_Visible,
+      Legend_Docking=input$Legend_Docking,
+      Relative_Position_Select=input$Relative_Position_Select,
+      Legend_X_Offset=input$Legend_X_Offset,
+      Legend_Y_Offset=input$Legend_Y_Offset
+    )
+    a <- Code
+    if(Code=="theme(legend.position = 'right')")
       return()
     # return(coord_trans_code(axis_x,axis_y))
     return(a)
@@ -272,10 +291,12 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
     gg_facets_codes<-get_facets_codes()
     #cat(file=stderr(), "\n gg_facets_codes is ",gg_facets_codes)
 
+    gg_legend_position_code <- get_legend_position_code()
+
     gg_UGC_codes<-get_UGC_codes()
     #cat(file=stderr(), "\n gg_UGC_codes is ",gg_UGC_codes)
 
-    gg2<-c("ggplot() ",gg_geom_codes, gg_coord_code, gg_themes_codes,gg_facets_codes,gg_UGC_codes)
+    gg2<-c("ggplot() ",gg_geom_codes, gg_coord_code, gg_themes_codes,gg_facets_codes,gg_legend_position_code,gg_UGC_codes)
     gg2<-gg2[!sapply(gg2,function(a)any(is.null(a),a==""))]
     gg2<-paste(sep="+",collapse ="+",c(gg2))
     gg2<-paste(c(gg_data_col_Class_as,gg2),sep="",collapse ="")
