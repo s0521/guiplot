@@ -173,9 +173,12 @@ guiplot <- function(..., out_dir = getwd()) {
     )
 
   }
-
-  runGadget(
-    #browser(),
-    guiplotUI, guiplotServer, viewer = browserViewer()
-  )
+  # suppressMessages({
+  #   suppressWarnings({
+      runGadget(
+        #browser(),
+        guiplotUI, guiplotServer, viewer = browserViewer()
+      )
+  #   })
+  # })
 }

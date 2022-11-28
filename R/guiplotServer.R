@@ -2,10 +2,10 @@ guiplot_tital_Server<- function(input, output, session, Moudel_plot_codes) {
   observeEvent(input$ColseButton, {
     a<-parse_exprs(Moudel_plot_codes$plot_code_expr())
     stopApp(a)
-    cat("Session stopped ,Because observeEvent \n")
+    #cat("Session stopped ,Because observeEvent \n")
   })
   onStop(function() {
-    cat("Session stopped, Because onStop \n")
+    #cat("Session stopped, Because onStop \n")
     })
 }
 
@@ -41,7 +41,7 @@ guiplot_result_Server <- function(input, output, session, out_dir =NULL, Moudel_
     )
     doSavePlot()
     sink( paste(out_dir,"/guiplot.r",sep=""))
-      cat(textOfCode())
+      #cat(textOfCode())
     sink()
   })
 
@@ -149,7 +149,7 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
         )
       if (!is.null(code))
         data_code[i]<-code
-      # cat(file=stderr(), "\n data_code is ",data_code)
+      # #cat(file=stderr(), "\n data_code is ",data_code)
     }
     data_code<-na.omit(data_code)
     data_codes<-paste(collapse ="+",data_code)
@@ -178,7 +178,7 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
       )
       if (!is.null(code))
         facets_codes[i]<-code
-      # cat(file=stderr(), "\n facets_code is ",facets_code)
+      # #cat(file=stderr(), "\n facets_code is ",facets_code)
       facets_codes<-na.omit(facets_codes)
       # browser()
       return(facets_codes)
@@ -257,30 +257,31 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
     ##输出数据的列类型转换代码
 
     gg_data_col_Class_as<-get_data_col_Class_as()
-    cat(file=stderr(), "\n gg_data_col_Class_as is ",gg_data_col_Class_as)
+    #cat(file=stderr(), "\n gg_data_col_Class_as is ",gg_data_col_Class_as)
     # browser()
     gg_geom_codes<-get_geom_codes()
-    cat(file=stderr(), "\n gg_geom_codes is ",gg_geom_codes)
+    #cat(file=stderr(), "\n gg_geom_codes is ",gg_geom_codes)
     # browser()
 
     gg_coord_code<-get_coord_trans_codes()
-    cat(file=stderr(), "\n gg_coord_code is ",gg_coord_code)
+    #cat(file=stderr(), "\n gg_coord_code is ",gg_coord_code)
 
     gg_themes_codes<-get_plot_themes_codes()
-    cat(file=stderr(), "\n gg_themes_codes is ",gg_themes_codes)
+    #cat(file=stderr(), "\n gg_themes_codes is ",gg_themes_codes)
 
     gg_facets_codes<-get_facets_codes()
-    cat(file=stderr(), "\n gg_facets_codes is ",gg_facets_codes)
+    #cat(file=stderr(), "\n gg_facets_codes is ",gg_facets_codes)
 
     gg_UGC_codes<-get_UGC_codes()
-    cat(file=stderr(), "\n gg_UGC_codes is ",gg_UGC_codes)
+    #cat(file=stderr(), "\n gg_UGC_codes is ",gg_UGC_codes)
 
     gg2<-c("ggplot() ",gg_geom_codes, gg_coord_code, gg_themes_codes,gg_facets_codes,gg_UGC_codes)
     gg2<-gg2[!sapply(gg2,function(a)any(is.null(a),a==""))]
     gg2<-paste(sep="+",collapse ="+",c(gg2))
     gg2<-paste(c(gg_data_col_Class_as,gg2),sep="",collapse ="")
 
-    cat(file=stderr(), "\n gg2 is ",gg2)
+    #cat(file=stderr(), "\n gg2 is ",gg2)
+    message("\n guiplot() generate code is ",gg2)
     # req(gg_geom_codes)
     if (all(is.null(gg_geom_codes)||gg_geom_codes=="",is.null(gg_UGC_codes)||gg_UGC_codes=="")){
         # return(ggplot())
