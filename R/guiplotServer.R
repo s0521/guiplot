@@ -238,7 +238,8 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
       color=input$x_color,
       size=input$x_size,
       add_UGC=input$x_add_UGC,
-      slope=""
+      slope="",
+      Diagonal_Line=""
     )
     #Y(hline)
     Y_Line_Code<-reference_line_code(
@@ -247,7 +248,8 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
       color=input$y_color,
       size=input$y_size,
       add_UGC=input$y_add_UGC,
-      slope=""
+      slope="",
+      Diagonal_Line=""
     )
     #lin(abline)
     AB_Line_Code<-reference_line_code(

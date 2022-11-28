@@ -140,7 +140,7 @@ plot_labs_code<-function(x=NULL,y=NULL,title=NULL,subtitle=NULL,caption=NULL,tag
 }
 
 #Reference line codes
-reference_line_code<-function(type=null,intercept=null,color=null,size=null,add_UGC=null,slope=null,Diagonal_Line=FALSE){
+reference_line_code<-function(type=NULL,intercept=NULL,color=NULL,size=NULL,add_UGC=NULL,slope=NULL,Diagonal_Line=FALSE){
 	#将如果空需要剔除的变量分别装入 line_value和line_code
 	line_value<-c(intercept,color,size,slope,add_UGC)
 	#转换下字符
