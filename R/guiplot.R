@@ -105,7 +105,7 @@ guiplot <- function(..., out_dir = getwd()) {
         a[j]<-paste(sep="" ,"setup_tabPanel_panel(","'",Parname,"'",")")
       }
       a<-paste(a,collapse =",")
-      b<-paste(sep="" ,"navlistPanel(widths = c(3, 9),",a,")")
+      b<-paste(sep="" ,"navlistPanel(widths = c(2, 10),",a,")")
       parse_expr(b)
     })
 

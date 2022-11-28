@@ -169,7 +169,7 @@ results_ui<-function(id="guiplot") {
     navlistPanel(
       well = TRUE,
       fluid = TRUE,
-      widths = c(3, 9),
+      widths = c(2, 10),
       # "data",
       # tabPanel(
       #   "data"
@@ -207,7 +207,7 @@ object_options_ui<-function(id="guiplot") {
   ns <- NS(id)
   navlistPanel(
     fluid = TRUE,
-    widths = c(3, 9),
+    widths = c(2, 10),
     "Plot",
       tabPanel(
         "themes",
@@ -232,7 +232,7 @@ object_options_ui<-function(id="guiplot") {
                   textInput(ns('caption_label'),'caption'),
                   textInput(ns('tag_label'),'tag')
             ),
-            column(4,
+            column(7,
                   helpText("For example:
                   soomth(data,aes(x,y),method='lm')+theme(panel.grid.major  = element_line(colour = 'gray90'))
                   "),
