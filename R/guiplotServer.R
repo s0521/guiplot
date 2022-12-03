@@ -18,7 +18,7 @@ guiplot_result_Server <- function(input, output, session, out_dir =NULL, Moudel_
   output_plot_height <- reactive({input$output_plot_height})
   output_plot_dpi <- reactive({input$output_plot_dpi})
   units <- reactive({"cm"})
-  textOfCode = reactive(gsub("\\+","\\+\n", Moudel_plot_codes$plot_code_expr()))
+  textOfCode = reactive(gsub(";",";\n",gsub("\\+","\\+\n", Moudel_plot_codes$plot_code_expr())))
 
   doSavePlot = reactive({
     aa <- textOfCode()
@@ -401,7 +401,7 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
   output$text_gg_codes <- renderText({
     # browser()
     a <- plot_code_expr()
-    gsub("\\+","\\+\n", a)
+    gsub(";",";\n",gsub("\\+","\\+\n", a))
   })
 
   #返回的内容
