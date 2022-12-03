@@ -372,7 +372,7 @@ object_options_ui<-function(id="guiplot") {
         tagList(
           fluidRow("Usage:geom_*line(*intercept=*intercept,color=*color,size=*size,UserCustomerCode)"),
           fluidRow(
-          "X(vline)",
+          # "X(vline)",
             column(3,
               "","X(vline)",
               textInput(ns('x_intercept'),'x intercept'),
