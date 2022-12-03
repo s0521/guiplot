@@ -83,6 +83,14 @@ axis_to_coord_code<-function(axis,x_y){
 		arry2<-NULL
 	}
 
+	#set Axis Tick
+	if (any(is.null(axis$Tick),axis$Tick==""))
+	{
+	  coord_code$Tick<-NULL
+	}else{
+		coord_code$Tick<- paste(sep="",collapse ="","breaks = c(",axis$Tick,")")
+	}
+
 	#set expand range
 	if (axis$expand_p==0.05 && axis$expand_u==0){
 	  coord_code$expand<-NULL
@@ -104,12 +112,15 @@ axis_to_coord_code<-function(axis,x_y){
 	if(
 	  is.null(coord_code$trans) &&
 	  is.null(coord_code$lim) &&
-    is.null(coord_code$expand)
+	  is.null(coord_code$expand) &&
+	  is.null(coord_code$Tick)
 	){
 	  one_axis<-NULL
 	}else{
-	  arry3<-c("scale_",x_y,"_continuous(",coord_code$trans,",",coord_code$lim,",",coord_code$expand,")")
-	  one_axis<-paste(sep="",collapse ="",arry3)
+		arry3 <- paste1(sep=",",collapse ="",coord_code$trans,coord_code$lim,coord_code$Tick,coord_code$expand)
+	#   arry3<-c("scale_",x_y,"_continuous(",coord_code$trans,",",coord_code$lim,",",coord_code$expand,")")
+	#   one_axis<-paste(sep="",collapse ="",arry3)
+	  one_axis<-paste(sep="",collapse ="","scale_",x_y,"_continuous(",arry3,")")
 	  arry3<-NULL
 	}
 	return(one_axis)

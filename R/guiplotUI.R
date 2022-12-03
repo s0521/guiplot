@@ -325,7 +325,8 @@ object_options_ui<-function(id="guiplot") {
                                 c("Auto-scale Uniform" = "none",
                                   "Custom" = "Custom")),
                    numericInput(ns('X_Minimum'),'Minimum',0),
-                   numericInput(ns('X_Maximum'),'Maximum',100)
+                   numericInput(ns('X_Maximum'),'Maximum',100),
+                   textInput(ns("X_Tick"),"Customer Axis Scale Tick" )
             ),
             column(3,
                    numericInput(ns('X_expand_p'),'expand_plot',0.05),
@@ -353,7 +354,8 @@ object_options_ui<-function(id="guiplot") {
                                 c("Auto-scale Uniform" = "none",
                                   "Custom" = "Custom")),
                    numericInput(ns('Y_Minimum'),'Minimum',0),
-                   numericInput(ns('Y_Maximum'),'Maximum',100)
+                   numericInput(ns('Y_Maximum'),'Maximum',100),
+                   textInput(ns("Y_Tick"),"Customer Axis Scale Tick" )
             ),
             column(3,
                    numericInput(ns('Y_expand_p'),'expand_plot',0.05),

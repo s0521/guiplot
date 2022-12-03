@@ -194,7 +194,8 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
       Minimum=input$X_Minimum,
       Maximum=input$X_Maximum,
       expand_p=input$X_expand_p,
-      expand_u=input$X_expand_u
+      expand_u=input$X_expand_u,
+      Tick=input$X_Tick
     )
     axis_y<-list(
       Scale=input$Y_Scale,
@@ -202,7 +203,8 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
       Minimum=input$Y_Minimum,
       Maximum=input$Y_Maximum,
       expand_p=input$Y_expand_p,
-      expand_u=input$Y_expand_u
+      expand_u=input$Y_expand_u,
+      Tick=input$Y_Tick
     )
     a<-coord_trans_code(axis_x,axis_y)
     if(nchar(a)<17){a=NULL }
