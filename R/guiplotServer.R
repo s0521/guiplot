@@ -188,6 +188,9 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
 
   #get coord codes
   get_coord_trans_codes <- reactive({
+
+    coord_flip <- NULL
+    if(input$coord_flip==TRUE) coord_flip <- "coord_flip()"
     axis_x<-list(
       Scale=input$X_Scale,
       Range=input$X_Range,
@@ -222,7 +225,7 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
     )
     ###
 
-    coord_labs_codes<-c(a,plot_labs_codes)
+    coord_labs_codes<-c(a,plot_labs_codes,coord_flip)
     coord_labs_codes<-coord_labs_codes[!sapply(coord_labs_codes,function(a)any(is_empty(a),is.null(a),a==""))]
     coord_labs_codes<-paste0(collapse ="+",c(coord_labs_codes))
     # browser()

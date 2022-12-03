@@ -224,7 +224,8 @@ object_options_ui<-function(id="guiplot") {
                                   "theme_classic" = "theme_classic",
                                   "theme_void" = "theme_void",
                                   "theme_minimal" = "theme_minimal")
-                                )
+                                ),
+                  checkboxInput(ns("coord_flip"), "Axes_flip?(X↔Y)", value = FALSE)
             ),
             column(3,
                   textInput(ns('title_label'),'title'),
