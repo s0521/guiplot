@@ -424,7 +424,28 @@ object_options_ui<-function(id="guiplot") {
 #     )
 #   )
 # }
-
+text_gg_codes_ui <- function(id = "guiplot") {
+  ns <- NS(id)
+  tagList(
+    fluidRow(
+      column(
+        6,
+        "Generated Codes",
+        verbatimTextOutput(
+          ns("text_gg_codes")
+        )
+      ),
+      column(
+        6,
+        textAreaInput(
+          ns("text_editor"),
+          "Just A Text Editor",
+          rows = 10
+        )
+      )
+    )
+  )
+}
 
 guiplotUI <- fluidPage(
   #Header
@@ -450,6 +471,7 @@ guiplotUI <- fluidPage(
 
   #Object Options
   object_options_ui("guiplot"),
+  text_gg_codes_ui("guiplot"),
 
   # JS customer
   tags$script(HTML(

@@ -39,10 +39,11 @@ guiplot_result_Server <- function(input, output, session, out_dir =NULL, Moudel_
     updateTabsetPanel(session = parentSession, inputId="ChildTabset",
       selected = "Results Panel"
     )
+    #保存图片为图片文件
     doSavePlot()
-    sink( paste(out_dir,"/guiplot.r",sep=""))
-      #cat(textOfCode())
-    sink()
+    #将代码保存为文本文件
+    cat(textOfCode(),file = "guiplot.r")
+
   })
 
   output$Results_Plot1 <- renderImage({
@@ -390,9 +391,19 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
    )
   })
 
+  #text code
+  plot_code_expr=reactive({as.character(get_plot_codes())})
+  output$text_gg_codes <- renderText({
+    # browser()
+    a <- plot_code_expr()
+    gsub("\\+","\\+\n", a)
+  })
+
+  #返回的内容
   return(
     list(
-      plot_code_expr=reactive({as.character(get_plot_codes())})
+      #plot_code_expr=reactive({as.character(get_plot_codes())})
+      plot_code_expr=plot_code_expr
       # width=reactive({input$output_plot_width}),
       # height=reactive({input$output_plot_height}),
       # scale=reactive({input$web_plot_scale}),
