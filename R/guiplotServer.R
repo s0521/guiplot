@@ -436,8 +436,10 @@ guiplot_Rexcle_Server <- function(input, output, sesson, data_and_name =NULL, fi
   txt_colClass<-function(data,typeTab,data_name){
     ##用于生成将列的类型由当前强制转换为typeTab中指定类型的文字，以便之后通过evalue使用
     out_txt<-""
-    class_Eq01<-mapply("==",typeTab[,2],sapply(data, class))##原类型和新类型是否一致
-    class_Eq02<-mapply("==",typeTab[,2],"")##新类型是否为空
+    ##原类型和新类型是否一致
+    class_Eq01<-mapply(identical ,typeTab[,2],sapply(data, class))
+    ##新类型是否为空
+    class_Eq02<-mapply(identical ,typeTab[,2],"")
     class_Eq<-!mapply(any,class_Eq01,class_Eq02)
     if(any(class_Eq)){
       ##获取需要修改类型的列的列名，并将此代码转换为文本
