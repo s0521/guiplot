@@ -1,8 +1,8 @@
 Package: guiplot
 Type: Package
 Title: User-Friendly GUI Plotting Tools
-Version: 0.3.0
-Authors@R:person("Fu Yongchao", role = c("aut", "cre","cph"),email = "3212418315@qq.com")
+Version: 0.3.1
+Authors@R: person("Fu Yongchao", role = c("aut", "cre","cph"),email = "3212418315@qq.com")
 Author: Fu Yongchao [aut, cre, cph]
 Maintainer: Fu Yongchao <3212418315@qq.com>
 Description: Create a user-friendly plotting GUI for 'R'.
@@ -13,4 +13,4 @@ License: MIT + file LICENSE
 Depends: R (>= 4.1.0)
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.2
