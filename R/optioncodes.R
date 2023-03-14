@@ -4,7 +4,7 @@ facets_code<-function(cols,rows){
     return()
   cols<-GetFacetGridText(cols)
   rows<-GetFacetGridText(rows)
-  text<-paste(sep="",collapse=",","facet_grid(",c(cols,rows),")")
+  text<-paste(sep="","facet_grid(",paste(collapse=",",c(cols,rows)),")")
   return(text)
 }
 GetFacetGridText<-function(data){
