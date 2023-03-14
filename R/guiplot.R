@@ -30,9 +30,9 @@
 guiplot <- function(..., out_dir = getwd()) {
   #Static data########################################################
 
-  c1name <- c("none","x","y","ymin","ymax","column","row","group","color","linetype","mark")
-  c2group <- c(rep("1",5),rep("3",2),rep("4",4))
-  c3display <-c(rep("Plot Data",5),rep("Lattice By",2),rep("Group By",4))
+  c1name <- c("none","x","y","ymin","ymax","column","row","group","color","fill","linetype","mark")
+  c2group <- c(rep("1",5),rep("3",2),rep("4",5))
+  c3display <-c(rep("Plot Data",5),rep("Lattice By",2),rep("Group By",5))
   c_name <- matrix (nrow=3,ncol=length(c1name),byrow = T )
   c_name[1,] <- c1name
   c_name[2,] <- c2group

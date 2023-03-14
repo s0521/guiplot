@@ -128,8 +128,9 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
       ymax<-GetMappingValue(mptable(),5)
       group<-GetMappingValue(mptable(),8)
       color<-GetMappingValue(mptable(),9)
-      linetype<-GetMappingValue(mptable(),10)
-      mark<-GetMappingValue(mptable(),11)
+      fill<-GetMappingValue(mptable(),10)
+      linetype<-GetMappingValue(mptable(),11)
+      mark<-GetMappingValue(mptable(),12)
       # type<-c("point","line")
       type<-get_geomtype_codes()
       ##geom User Customer Code
@@ -144,6 +145,7 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
         ymax=ymax,
         group=group,
         color=color,
+        fill=fill,
         linetype=linetype,
         shape=mark,
         type_UGC=type_UGC
