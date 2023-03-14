@@ -184,6 +184,10 @@ results_ui<-function(id="guiplot") {
         "guipot_codes",
         verbatimTextOutput(ns('Results_Text1_guipot_codes'))
       ),
+      tabPanel(
+        "Phoenix_codes",
+        verbatimTextOutput(ns('Results_Text1_Phoenix_codes'))
+      ),
       "other",
       tabPanel(
         "other",
