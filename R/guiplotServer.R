@@ -45,6 +45,24 @@ guiplot_result_Server <- function(input, output, session, out_dir =NULL, Moudel_
     #将代码保存为文本文件
     cat(textOfCode_guipot_codes(),file = "guiplot.r")
 
+    textOfCode_Phoenix_codes_shell <- paste0(
+      "#Load dependent packages,加载依赖的添加包","\n",
+      "require(guiplot)","\n",
+      "require(ggplot2)","\n",
+      "\n",
+      "#The following statement describes the required dataset and the columns it contains,","\n",
+      "#which are required by Phoenix software and can be deleted if non-Phoenix software users.","\n",
+      "#This is generated based on the mapping state in the mapping table","\n",
+      "#下述语句说明了所必须的数据集以及数据集包含的列,","\n",
+      "#这是Phoenix软件所需要的，如果非Phoenix软件用户可删除掉。","\n",
+      "#这是基于映射表格中映射情况生成的","\n",
+      "\n",
+      textOfCode_Phoenix_codes(),"\n",
+      "\n",
+      "#The drawing code of plot,图表绘制的代码","\n",
+      textOfCode_guipot_codes())
+    cat(textOfCode_Phoenix_codes_shell(),file = "Phoenix_codes.r")
+
   })
 
   output$Results_Plot1 <- renderImage({
