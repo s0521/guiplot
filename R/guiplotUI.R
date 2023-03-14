@@ -181,8 +181,8 @@ results_ui<-function(id="guiplot") {
       ),
       "text",
       tabPanel(
-        "text",
-        verbatimTextOutput(ns('Results_Text1'))
+        "guipot_codes",
+        verbatimTextOutput(ns('Results_Text1_guipot_codes'))
       ),
       "other",
       tabPanel(

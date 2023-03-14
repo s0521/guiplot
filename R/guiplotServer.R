@@ -56,7 +56,7 @@ guiplot_result_Server <- function(input, output, session, out_dir =NULL, Moudel_
     )
   },deleteFile=TRUE)
 
-  output$Results_Text1 <- renderText({
+  output$Results_Text1_guipot_codes <- renderText({
     textOfCode()
   })
 }
