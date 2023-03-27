@@ -1,4 +1,18 @@
 NEWS for the guiplot package
+Changes for 0.4.0
+------------------
+* Add
+映射列表中增加了一个字段“fill”，以满足某些使用fill涂色的几何图案分组需求
+输出结果中增加了一个文本结果“guiplot.r”，期中储存了可在Phoenix中直接使用的R代码（加载R包、加载数据级、绘图）
+
+*Fixed
+修复了画布中图形排布bug，该bug导致同时分别映射有column和rows时会发生报错。
+改进了文本编辑器、附加代码编辑器的显示宽度
+改进了geom_Additional_Code中的部分提示文字
+
+*Date
+2023年3月27日
+
 Changes for 0.3.1
 ------------------
 * Add
