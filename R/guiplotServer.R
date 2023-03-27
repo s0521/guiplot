@@ -46,21 +46,22 @@ guiplot_result_Server <- function(input, output, session, out_dir =NULL, Moudel_
     cat(textOfCode_guipot_codes(),file = "guiplot.r")
 
     textOfCode_Phoenix_codes_shell <- paste0(
-      "#Load dependent packages,加载依赖的添加包","\n",
+      "#Load dependent packages,\u52a0\u8f7d\u4f9d\u8d56\u7684\u6dfb\u52a0\u5305","\n",
       "require(guiplot)","\n",
       "require(ggplot2)","\n",
       "\n",
       "#The following statement describes the required dataset and the columns it contains,","\n",
       "#which are required by Phoenix software and can be deleted if non-Phoenix software users.","\n",
       "#This is generated based on the mapping state in the mapping table","\n",
-      "#下述语句说明了所必须的数据集以及数据集包含的列,","\n",
-      "#这是Phoenix软件所需要的，如果非Phoenix软件用户可删除掉。","\n",
-      "#这是基于映射表格中映射情况生成的","\n",
+      "#\u4e0b\u8ff0\u8bed\u53e5\u8bf4\u660e\u4e86\u6240\u5fc5\u987b\u7684\u6570\u636e\u96c6\u4ee5\u53ca\u6570\u636e\u96c6\u5305\u542b\u7684\u5217,","\n",
+      "#\u8fd9\u662fPhoenix\u8f6f\u4ef6\u6240\u9700\u8981\u7684,\u5982\u679c\u975ePhoenix\u8f6f\u4ef6\u7528\u6237\u53ef\u5220\u9664\u6389\u3002","\n",
+      "#\u8fd9\u662f\u57fa\u4e8e\u6620\u5c04\u8868\u683c\u4e2d\u6620\u5c04\u60c5\u51b5\u751f\u6210\u7684","\n",
       "\n",
       textOfCode_Phoenix_codes(),"\n",
       "\n",
-      "#The drawing code of plot,图表绘制的代码","\n",
-      textOfCode_guipot_codes())
+      "#The drawing code of plot,\u56fe\u8868\u7ed8\u5236\u7684\u4ee3\u7801","\n",
+      textOfCode_guipot_codes()
+      )
     cat(textOfCode_Phoenix_codes_shell,file = "Phoenix_codes.r")
 
   })
@@ -80,21 +81,22 @@ guiplot_result_Server <- function(input, output, session, out_dir =NULL, Moudel_
   })
   output$Results_Text1_Phoenix_codes <- renderText({
     paste0(
-      "#Load dependent packages,加载依赖的添加包","\n",
+      "#Load dependent packages,\u52a0\u8f7d\u4f9d\u8d56\u7684\u6dfb\u52a0\u5305","\n",
       "require(guiplot)","\n",
       "require(ggplot2)","\n",
       "\n",
       "#The following statement describes the required dataset and the columns it contains,","\n",
       "#which are required by Phoenix software and can be deleted if non-Phoenix software users.","\n",
       "#This is generated based on the mapping state in the mapping table","\n",
-      "#下述语句说明了所必须的数据集以及数据集包含的列,","\n",
-      "#这是Phoenix软件所需要的，如果非Phoenix软件用户可删除掉。","\n",
-      "#这是基于映射表格中映射情况生成的","\n",
+      "#\u4e0b\u8ff0\u8bed\u53e5\u8bf4\u660e\u4e86\u6240\u5fc5\u987b\u7684\u6570\u636e\u96c6\u4ee5\u53ca\u6570\u636e\u96c6\u5305\u542b\u7684\u5217,","\n",
+      "#\u8fd9\u662fPhoenix\u8f6f\u4ef6\u6240\u9700\u8981\u7684,\u5982\u679c\u975ePhoenix\u8f6f\u4ef6\u7528\u6237\u53ef\u5220\u9664\u6389\u3002","\n",
+      "#\u8fd9\u662f\u57fa\u4e8e\u6620\u5c04\u8868\u683c\u4e2d\u6620\u5c04\u60c5\u51b5\u751f\u6210\u7684","\n",
       "\n",
       textOfCode_Phoenix_codes(),"\n",
       "\n",
-      "#The drawing code of plot,图表绘制的代码","\n",
-      textOfCode_guipot_codes())
+      "#The drawing code of plot,\u56fe\u8868\u7ed8\u5236\u7684\u4ee3\u7801","\n",
+      textOfCode_guipot_codes()
+    )
   })
 }
 
