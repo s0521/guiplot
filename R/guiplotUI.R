@@ -241,7 +241,7 @@ object_options_ui<-function(id="guiplot") {
                   helpText("For example:
                   geom_smooth(aes(x,y),data=data,method='lm')+theme(panel.grid.major  = element_line(colour = 'gray90'))
                   "),
-                  textAreaInput(ns("UGC"), "Additional custom R language code", rows = 10)
+                  textAreaInput(ns("UGC"), "Additional custom R language code", rows = 10,width='100%')
             )
           )
         )
@@ -413,7 +413,7 @@ object_options_ui<-function(id="guiplot") {
           fluidRow(
             "geom Additional User Customer Code",
             helpText("Usage:  geom_line(data=data,aes(x=x,y=y, geom_Additional_AesCode ), geom_Additional_Code )"),
-            helpText("For Example Code: method = 'lm' , method = 'glm' ,  color='red', color='blue' , shape=2"),
+            helpText("For Example Code: method = 'lm' , method = 'glm' ,  color='red', color='blue' , shape=2, alpha=0.2"),
             DTOutput(ns('geom_Additional_UGC'))
           )
         )
@@ -447,7 +447,8 @@ text_gg_codes_ui <- function(id = "guiplot") {
         textAreaInput(
           ns("text_editor"),
           "Just A Text Editor",
-          rows = 10
+          rows = 10,
+          width='100%'
         )
       )
     )
