@@ -61,7 +61,7 @@ guiplot_result_Server <- function(input, output, session, out_dir =NULL, Moudel_
       "\n",
       "#The drawing code of plot,图表绘制的代码","\n",
       textOfCode_guipot_codes())
-    cat(textOfCode_Phoenix_codes_shell(),file = "Phoenix_codes.r")
+    cat(textOfCode_Phoenix_codes_shell,file = "Phoenix_codes.r")
 
   })
 
