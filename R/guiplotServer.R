@@ -46,10 +46,6 @@ guiplot_result_Server <- function(input, output, session, out_dir =NULL, Moudel_
     cat(textOfCode_guipot_codes(),file = "guiplot.r")
 
     textOfCode_Phoenix_codes_shell <- paste0(
-      "#Load dependent packages,\u52a0\u8f7d\u4f9d\u8d56\u7684\u6dfb\u52a0\u5305","\n",
-      "require(guiplot)","\n",
-      "require(ggplot2)","\n",
-      "\n",
       "#The following statement describes the required dataset and the columns it contains,","\n",
       "#which are required by Phoenix software and can be deleted if non-Phoenix software users.","\n",
       "#This is generated based on the mapping state in the mapping table","\n",
@@ -59,8 +55,26 @@ guiplot_result_Server <- function(input, output, session, out_dir =NULL, Moudel_
       "\n",
       textOfCode_Phoenix_codes(),"\n",
       "\n",
+      "#Load dependent packages,\u52a0\u8f7d\u4f9d\u8d56\u7684\u6dfb\u52a0\u5305","\n",
+      "require(guiplot)","\n",
+      "require(ggplot2)","\n",
+      "\n",
       "#The drawing code of plot,\u56fe\u8868\u7ed8\u5236\u7684\u4ee3\u7801","\n",
-      textOfCode_guipot_codes()
+      textOfCode_guipot_codes(),"\n",
+      "\n",
+      "#Save plot as png and pdf","\n",
+      "ggsave('guiplot.png'",
+        ",width =", input$output_plot_width,
+        ",height =",input$output_plot_height,
+        ",units ='",units(),
+        "',scale =", input $web_plot_scale,
+      ")","\n",
+      "ggsave('guiplot.pdf'",
+        ",width =", input$output_plot_width,
+        ",height =",input$output_plot_height,
+        ",units ='",units(),
+        "',scale =", input $web_plot_scale,
+      ")"
       )
     cat(textOfCode_Phoenix_codes_shell,file = "Phoenix_codes.r")
 
@@ -81,10 +95,6 @@ guiplot_result_Server <- function(input, output, session, out_dir =NULL, Moudel_
   })
   output$Results_Text1_Phoenix_codes <- renderText({
     paste0(
-      "#Load dependent packages,\u52a0\u8f7d\u4f9d\u8d56\u7684\u6dfb\u52a0\u5305","\n",
-      "require(guiplot)","\n",
-      "require(ggplot2)","\n",
-      "\n",
       "#The following statement describes the required dataset and the columns it contains,","\n",
       "#which are required by Phoenix software and can be deleted if non-Phoenix software users.","\n",
       "#This is generated based on the mapping state in the mapping table","\n",
@@ -94,8 +104,26 @@ guiplot_result_Server <- function(input, output, session, out_dir =NULL, Moudel_
       "\n",
       textOfCode_Phoenix_codes(),"\n",
       "\n",
+      "#Load dependent packages,\u52a0\u8f7d\u4f9d\u8d56\u7684\u6dfb\u52a0\u5305","\n",
+      "require(guiplot)","\n",
+      "require(ggplot2)","\n",
+      "\n",
       "#The drawing code of plot,\u56fe\u8868\u7ed8\u5236\u7684\u4ee3\u7801","\n",
-      textOfCode_guipot_codes()
+      textOfCode_guipot_codes(),"\n",
+      "\n",
+      "#Save plot as png and pdf","\n",
+      "ggsave('guiplot.png'",
+        ",width =", input$output_plot_width,
+        ",height =",input$output_plot_height,
+        ",units ='",units(),
+        "',scale =", input $web_plot_scale,
+      ")","\n",
+      "ggsave('guiplot.pdf'",
+        ",width =", input$output_plot_width,
+        ",height =",input$output_plot_height,
+        ",units ='",units(),
+        "',scale =", input $web_plot_scale,
+      ")"
     )
   })
 }
