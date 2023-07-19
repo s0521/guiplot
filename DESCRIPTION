@@ -1,7 +1,7 @@
 Package: guiplot
 Type: Package
 Title: User-Friendly GUI Plotting Tools
-Version: 0.4.0
+Version: 0.4.1
 Authors@R: person("Fu Yongchao", role = c("aut", "cre","cph"),email = "3212418315@qq.com")
 Author: Fu Yongchao [aut, cre, cph]
 Maintainer: Fu Yongchao <3212418315@qq.com>
