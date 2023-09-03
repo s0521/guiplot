@@ -615,7 +615,7 @@ guiplot_dt_Server <- function(input, output, sesson, data_and_name =NULL, field_
   #################################
   #################################
   #实例化一个Mapping_Table对象
-  obj_mptbl<-Mapping_Table_class$new(field_groups=field_groups,variable=r_name,default_field=1)
+  obj_mptbl<-Mapping_Table_class$new(field_groups=field_groups,variable=r_name)
   # browser()
   obj_mptbl$create_mptbl()
 
@@ -623,7 +623,8 @@ guiplot_dt_Server <- function(input, output, sesson, data_and_name =NULL, field_
   env_guiplot$dat<-obj_mptbl$mapping_table
   sketch <-obj_mptbl$DT_container
   field_right_bound<-obj_mptbl$field_right_bound
-
+  jsfile<-system.file("extdata", "callback.js", package = "guiplot")
+  jscode<-readLines(jsfile)
   #################################
   #################DataTable#######
   #################################
@@ -633,68 +634,37 @@ guiplot_dt_Server <- function(input, output, sesson, data_and_name =NULL, field_
       rownames = TRUE,width=100 ,
       # editable = list(target = "cell"),
       selection = list(mode = 'single', target = 'cell'),
-      callback = JS(callback),
+      callback = JS(jscode),
       extensions = c('AutoFill'),
       container =sketch,
       class = 'table-hover',
       options = list(
         autoFill = list(alwaysAsk=FALSE),
+        # initComplete=JS(jscode),
         # autoWidth = TRUE,
         columnDefs = list(
           # list(width = '20px', targets = 1:ncol(env_guiplot$dat)),
           list(className = 'dt-center success', targets = 1:ncol(env_guiplot$dat)),
-          list(render=JS(Colum_render_js),targets = 1:ncol(env_guiplot$dat))
+          list(render=JS(Colum_render_js),targets = 2:ncol(env_guiplot$dat))
         ),
         dom = 't',paging = FALSE, ordering = FALSE
       )
     )%>% formatStyle(field_right_bound, 'border-right' = 'solid')
-  })
+  },server = FALSE)
 
-  #################################
-  #################reactive########
-  #################################
-  # observe({
-  #   Data_fill()
-  #   Data_select()
-  # })
-
-  Data_fill <- reactive({
-    # browser()
-    info <- input[["dt_cells_filled"]]
-	#print(c("\n info is ",info))
-    if(!is.null(info)){
-      info <- unique(info)
-      info$value[info$value==""] <- NA
-
-      obj_mptbl$mptbl_event_fill(info)
-      env_guiplot$dat <- editData(env_guiplot$dat, as.data.frame(obj_mptbl$inf_of_mptbl), proxy = "dt")
-    }
-    env_guiplot$dat
-  })
-
-  Data_select <- reactive({
-    # browser()
-    a<-env_guiplot$dat
-    info <- input[["dt_cells_selected"]]
-    if(is.null(info)||ncol(info)<2){
-      # return()
-    }else{
-      info<-cbind(info,env_guiplot$dat[info[1],info[2]])
-
-      obj_mptbl$mptbl_event_select(info)
-      env_guiplot$dat <- editData(env_guiplot$dat, as.data.frame(obj_mptbl$inf_of_mptbl), proxy = "dt")
-    }
-    env_guiplot$dat
-  })
+  dt_table_mp <- reactive({
+      mp <- if(!is.null(input$dt_table_mp)){fromJSON(input$dt_table_mp[[1]])}else {NULL}
+      mp_rowName <- if(!is.null(input$dt_table_mp_rowName)){fromJSON(input$dt_table_mp_rowName[[1]])}else {NULL}
+      rownames(mp) <- mp_rowName
+      mp
+    })
 
   #################################
   #################################
   #################################
   #return
   return(list(mptable=reactive({
-    Data_fill()
-    Data_select()
-    a<-env_guiplot$dat
+    a<-dt_table_mp()
     return(a)
   })))
 
@@ -760,8 +730,6 @@ guiplot_layout_updata_server<-function(input, output, session){
   output$vline = renderDT({
 		linshi_vline_dt_table
   })
-
-
 
 }
 guiplot_geom_Additional_UGC_dt_Server <- function(input, output, sesson) {
@@ -874,7 +842,8 @@ GetUsedDataColumnsNames<-function(data){
   if (is.null(nr)) return(NULL)#如果表格为空，则退出
   # browser()
   data_exclude_None <- data[,-1]#去掉none字段
-  sumD <- apply(data_exclude_None,1,sum)#求每一行的和
+  # sumD <- apply(data_exclude_None,1,sum)#求每一行的和
+  sumD <- apply(data_exclude_None,1,function(x) sum(as.numeric(x)))#求每一行的和
   if(sum(sumD)==0) return(NULL)
   usecols <- rownames(data)[sumD!=0]#如果和不为0（未作任何映射），则返回此行的名称（数据集中的列名）
   usecols <- gsub(" ","_",usecols)#WNL的列名中不支持空格，所以此处将空格替换为下划线
@@ -884,48 +853,12 @@ GetUsedDataColumnsNames<-function(data){
 
 ####~~ JS回调代码-----
 ####~~~ callback for guiplot_dt_Server------
-####获取Autofill的填充相关的事件，并包装为一个输入项_cells_filled返还给shiny
-callback <- c(
-  "var tbl = $(table.table().node());",
-  "var id = tbl.closest('.datatables').attr('id');",
-  "table.on('preAutoFill', function(e, datatable, cells){",
-  "  var out = [];",
-  "  for(var i = 0; i < cells.length; ++i){",
-  "    var cells_i = cells[i];",
-  "    for(var j = 0; j < cells_i.length; ++j){",
-  "      var c = cells_i[j];",
-  "      var value = c.set === null ? '' : c.set;",
-  "      out.push({",
-  "        row: c.index.row + 1,",
-  "        col: c.index.column ,",
-  "        value: value",
-  "      });",
-  "    }",
-  "  }",
-  "  Shiny.setInputValue(id + '_cells_filled:DT.cellInfo', out);",
-  "  table.rows().invalidate();", # this updates the column type
-  "});",
-  #########################################################################
-  ####~~ 将“AutoFill”的填充提示选项中的不需要的部分移除，以使不弹出提示#######
-  "delete $.fn.dataTable.AutoFill.actions.increment;",
-  "delete $.fn.dataTable.AutoFill.actions.fillHorizontal;",
-  "delete $.fn.dataTable.AutoFill.actions.fillVertical;",
-  ##########################################################################
-  ####为tbody添加鼠标悬浮事件捕获，以设置dt-autofill-handle的附加类#########
-  ####通过附加类为dt-autofill-handle添加其他固定的样式
-  ####以使dt-autofill-handle不在消失
-  "$('tbody').on('mouseover', function() {$('.dt-autofill-handle').addClass('hdAa')});",
-  "	var style = document.createElement('style');",
-  "	style.innerHTML = '.hdAa {background: green !important;display: block!important}';",
-  "	document.head.appendChild(style);"
-  ##########################################################################
-)
-
 
 Colum_render_js <- c(
   ##########################################
   ####列的反应式渲染，已将0、1变为复选框####
   " function(data, type, row, meta) {",
-  " if(data == 0){return '<input type=\"checkbox\" >'}",
-  " if(data == 1){return '<input type=\"checkbox\"  checked>'}}"
+  " if(data == '0'){return '<input type=\"checkbox\" >'}",
+  " if(data == '1'){return '<input type=\"checkbox\"  checked>'}",
+  " if(data != '1'){return data}}"
 )

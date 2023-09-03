@@ -12,6 +12,7 @@
 #' @importFrom rlang parse_expr parse_exprs expr is_empty
 #' @importFrom stats na.omit
 #' @importFrom magrittr %>%
+#' @importFrom jsonlite fromJSON
 #' @examples
 #' if (interactive()) {
 #' # Launch with built-in PK data set:
@@ -30,13 +31,20 @@
 guiplot <- function(..., out_dir = getwd()) {
   #Static data########################################################
 
-  c1name <- c("none","x","y","ymin","ymax","column","row","group","color","fill","linetype","mark")
-  c2group <- c(rep("1",5),rep("3",2),rep("4",5))
-  c3display <-c(rep("Plot Data",5),rep("Lattice By",2),rep("Group By",5))
-  c_name <- matrix (nrow=3,ncol=length(c1name),byrow = T )
-  c_name[1,] <- c1name
-  c_name[2,] <- c2group
-  c_name[3,] <- c3display
+  c1name <- c("hide","none", "x", "y", "ymin", "ymax", "column", "row", "group", "color", "fill", "linetype", "mark")
+  c2display <- c("",rep("Plot Data", 5), rep("Lattice By", 2), rep("Group By", 5))
+  c3rowset <- c("0",rep("1", 5), rep("3", 2), rep("4", 5))
+  c4colset <- c("0","0", "1", rep("0", 3), rep("1", 2), rep("0", 5))
+  c5intset <- c("0","1", "0", rep("0", 10))
+  c6colhide <- c("0","1", rep("1", 11))
+
+  c_name <- matrix(nrow = 6, ncol = length(c1name), byrow = T)
+  c_name[1, ] <- c1name
+  c_name[2, ] <- c2display
+  c_name[3, ] <- c3rowset
+  c_name[4, ] <- c4colset
+  c_name[5, ] <- c5intset
+  c_name[6, ] <- c6colhide
 
   field_groups<-c_name
 
