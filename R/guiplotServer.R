@@ -225,7 +225,11 @@ guiplot_plot_Server <- function(input, output, session, data =NULL,datanames=NUL
       UsedDataColumnsNames <- GetUsedDataColumnsNames(mptable())
 
       if (!is.null(UsedDataColumnsNames)) {
-        UsedDataColumnsNames_text<-paste0("attach(",dataname,") #WNL_IN ",paste(UsedDataColumnsNames,collapse=" "),"#")
+        UsedDataColumnsNames_text<-paste0(
+          "attach(",dataname,") #WNL_IN ",paste(UsedDataColumnsNames,collapse=" "),"#",
+          ";colnames(", dataname , ") <- c(" , paste0(sprintf("'%s'", UsedDataColumnsNames), collapse = ", ") , ")"
+        )
+        
         # browser()
         UsedColNames_text[i]<-UsedDataColumnsNames_text
       }
