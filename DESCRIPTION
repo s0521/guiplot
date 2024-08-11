@@ -8,6 +8,7 @@ Maintainer: Fu Yongchao <3212418315@qq.com>
 Description: Create a user-friendly plotting GUI for 'R'.
     In addition, one purpose of creating the 'R' package is to facilitate third-party software to call 'R' for drawing, for example, 'Phoenix WinNonlin' software calls 'R' to draw the drug concentration versus time curve.
 URL: https://s0521.github.io/guiplot/about/
+BugReports: https://github.com/s0521/guiplot/issues
 Imports: shiny(>= 1.0.0), ggplot2 (>= 3.3.0), svglite, DT, rlang (>= 0.3.1),stats, magrittr,R6,excelR,jsonlite
 License: MIT + file LICENSE
 Depends: R (>= 4.1.0)
